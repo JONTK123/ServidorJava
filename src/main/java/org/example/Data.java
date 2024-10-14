@@ -105,7 +105,7 @@ public class Data implements Comparable <Data>, Cloneable {
                 (this.mes<10?"0":"") +
                 this.mes +
                 "/" +
-                (this.ano<0?(-this.ano+"ac"):this.ano);
+                (this.ano<0?(-this.ano):this.ano);
     }
 
     // equals compara this e obj
