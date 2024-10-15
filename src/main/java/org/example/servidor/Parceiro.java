@@ -1,15 +1,11 @@
-package org.example.Servidor;
+package org.example;
 
 import java.io.*;
-import java.net.*;
-import java.util.*;
 import java.util.concurrent.Semaphore;
-import org.example.Comunicado;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.concurrent.Semaphore;
 
 //Classe Parceiro, responsável por estabelecer a comunicação entre o servidor e o cliente
 public class Parceiro {
