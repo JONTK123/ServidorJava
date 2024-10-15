@@ -28,10 +28,7 @@ public class PedidoAddUsuario extends Comunicado {
         String t = scanner.nextLine(); short ano = Short.parseShort(t);
         Data dataNascimento = new Data(dia,mes,ano);
 
-        System.out.print("Senha: ");
-        String senha = scanner.nextLine();
-
-        Usuario usuario = new Usuario(nome, email, dataNascimento.toString(), senha);
+        Usuario usuario = new Usuario(nome, email, dataNascimento);
         bancoDados.addUsuario(usuario);
 
         System.out.println("Usuário cadastrado com sucesso!");
