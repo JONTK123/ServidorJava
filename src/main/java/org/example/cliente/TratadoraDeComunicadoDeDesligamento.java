@@ -1,37 +1,29 @@
 package org.example.cliente;
 
+import org.example.Comunicado;
 import org.example.Parceiro;
 import org.example.servidor.ComunicadoDeDesligamento;
 
-import java.net.*;
-
-public class TratadoraDeComunicadoDeDesligamento extends Thread
-{
+public class TratadoraDeComunicadoDeDesligamento extends Thread {
     private Parceiro servidor;
 
-    public TratadoraDeComunicadoDeDesligamento (Parceiro servidor) throws Exception
-    {
-        if (servidor==null)
-            throw new Exception ("Porta invalida");
-
+    public TratadoraDeComunicadoDeDesligamento(Parceiro servidor) {
         this.servidor = servidor;
     }
 
-    public void run ()
-    {
-        for(;;)
-        {
-            try
-            {
-                if (this.servidor.espie() instanceof ComunicadoDeDesligamento)
-                {
-                    System.out.println ("\nO servidor vai ser desligado agora;");
-                    System.err.println ("volte mais tarde!\n");
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                Comunicado comunicado = servidor.espie();
+                if (comunicado instanceof ComunicadoDeDesligamento) {
+                    System.out.println("Servidor solicitou desligamento. Encerrando...");
+                    servidor.adeus();
                     System.exit(0);
                 }
             }
-            catch (Exception erro)
-            {}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

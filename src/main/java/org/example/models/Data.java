@@ -4,11 +4,8 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.example.Comunicado;
 
 public class Data  extends Comunicado implements Comparable <Data>, Cloneable {
-    @BsonProperty("dia")
     private byte  dia;
-    @BsonProperty("mes")
     private byte  mes;
-    @BsonProperty("ano")
     private short ano;
     private static int qtd=0;
 
@@ -41,9 +38,6 @@ public class Data  extends Comunicado implements Comparable <Data>, Cloneable {
 
         return true;
     }
-
-    // Construtor sem argumentos (necessário para o PojoCodecProvider)
-    public Data() {}
 
     public /*void*/ Data (byte dia, byte mes, short ano) throws Exception
     {

@@ -1,17 +1,17 @@
 package org.example.cliente;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import org.example.BancoDados;
 import org.example.Parceiro;
 import org.example.Teclado;
 import org.example.models.Data;
+import org.example.servidor.ComunicadoDeDesligamento;
+import org.example.cliente.PedidoAddUsuario;
+import org.example.cliente.PedidoDesligarServidor;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class Cliente {
-
 
     public static final String HOST_PADRAO = "localhost";
     public static final int PORTA_PADRAO = 3000;
@@ -60,13 +60,7 @@ public class Cliente {
             return;
         }
 
-        TratadoraDeComunicadoDeDesligamento tratadoraDeComunicadoDeDesligamento = null;
-        try {
-            tratadoraDeComunicadoDeDesligamento = new TratadoraDeComunicadoDeDesligamento(servidor);
-        } catch (Exception erro) {
-        }
-
-        tratadoraDeComunicadoDeDesligamento.start();
+        //Falta implementar TratadoraDeComunicadoDeDesligamento
 
         char opcao = 0;
         do {
@@ -91,11 +85,26 @@ public class Cliente {
                 short ano = Short.parseShort(dataParts[2]);
                 Data dataNascimento = new Data(dia, mes, ano);
 
-                PedidoAddUsuario pedidoAddUsuario = new PedidoAddUsuario(nome, email, dataNascimento);
+                char isPhysicalPersonOption;
+                boolean validOption;
+                do {
+                    System.out.print("Pessoa física (S/N)? ");
+                    isPhysicalPersonOption = Teclado.getUmChar();
+                    validOption = (isPhysicalPersonOption == 'S' || isPhysicalPersonOption == 'N');
+                    if (!validOption) {
+                        System.out.println("Opção inválida");
+                    }
+                } while (!validOption);
+
+                boolean isPhysicalPerson = (isPhysicalPersonOption == 'S');
+
+                PedidoAddUsuario pedidoAddUsuario = new PedidoAddUsuario(nome, email, dataNascimento.toString(), isPhysicalPerson);
                 servidor.receba(pedidoAddUsuario); // Envia para o servidor
+                System.out.println("Pedido enviado para o servidor");
                 break;
             case 'T':
-                // servidor.receba(new PedidoDesligamento());
+                servidor.receba(new PedidoDesligarServidor());
+                System.out.println("Pedido de desligamento enviado para o servidor");
                 break;
         }
     }

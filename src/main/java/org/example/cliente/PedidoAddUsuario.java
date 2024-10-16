@@ -1,32 +1,28 @@
 package org.example.cliente;
 
-import org.example.BancoDados;
 import org.example.Comunicado;
 import org.example.models.Data;
-import org.example.models.Usuario;
 
 public class PedidoAddUsuario extends Comunicado {
     private String nome;
     private String email;
-    private Data dataNascimento;
-    //Eu tentei implementar banco de dados aqui tambem mas eh um problema e deu bug... Nao eha conselhavel passar operacoes de BD na rede
+    private String dataNascimento;
+    private boolean isPhysicalPerson;
 
-    public PedidoAddUsuario( String nome, String email, Data dataNascimento) {
+    public PedidoAddUsuario(String nome, String email, String dataNascimento, boolean isPhysicalPerson) {
         super();
         this.nome = nome;
         this.email = email;
-        this.dataNascimento = (Data) dataNascimento.clone();
+        this.dataNascimento = dataNascimento;
+        this.isPhysicalPerson = isPhysicalPerson;
     }
 
     public String getNome() {
         return nome;
     }
-
     public String getEmail() {
         return email;
     }
-
-    public Data getDataNascimento() {
-        return dataNascimento;
-    }
+    public String getDataNascimento() { return dataNascimento; }
+    public boolean getIsPhysicalPerson() { return isPhysicalPerson; }
 }
