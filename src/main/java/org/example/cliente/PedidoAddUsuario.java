@@ -1,7 +1,6 @@
 package org.example.cliente;
 
 import org.example.Comunicado;
-import org.example.models.Data;
 
 public class PedidoAddUsuario extends Comunicado {
     private String nome;

@@ -1,11 +1,8 @@
 package org.example.servidor;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import org.example.Parceiro;
 import org.example.BancoDados;
-import org.example.cliente.PedidoAddUsuario;
-import org.example.cliente.PedidoDesligarServidor;
-import org.example.models.Usuario;
-
+import io.github.cdimascio.dotenv.Dotenv;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -47,6 +44,15 @@ public class Servidor {
                 // Tratando req do cliente desligar
                 TratadorDePedidoDesligarServidor tratadorDesligarServidor = new TratadorDePedidoDesligarServidor(parceiro, servidor);
                 tratadorDesligarServidor.start();
+
+                // Tratando req do cliente addEmpresa
+                TratadorDePedidoAddEmpresa tratadorAddEmpresa = new TratadorDePedidoAddEmpresa(parceiro, bancoDados);
+                tratadorAddEmpresa.start();
+
+                // Tratando req do cliente avaliarEmpresa
+                TratadorDePedidoAvaliarEmpresa tratadorAvaliarEmpresa = new TratadorDePedidoAvaliarEmpresa(parceiro, bancoDados);
+                tratadorAvaliarEmpresa.start();
+
             } catch (Exception e) {
                 if (!running) {
                     System.out.println("Servidor desligado.");

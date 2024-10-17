@@ -1,9 +1,6 @@
 package org.example.models;
 
-import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.example.Comunicado;
-
-public class Data  extends Comunicado implements Comparable <Data>, Cloneable {
+public class Data implements Comparable <Data>, Cloneable {
     private byte  dia;
     private byte  mes;
     private short ano;

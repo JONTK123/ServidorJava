@@ -3,10 +3,6 @@ package org.example.cliente;
 import org.example.Parceiro;
 import org.example.Teclado;
 import org.example.models.Data;
-import org.example.servidor.ComunicadoDeDesligamento;
-import org.example.cliente.PedidoAddUsuario;
-import org.example.cliente.PedidoDesligarServidor;
-
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -64,11 +60,13 @@ public class Cliente {
 
         char opcao = 0;
         do {
-            System.out.println("1. Cadastrar");
+            System.out.println("1. Cadastrar Usuario");
+            System.out.println("2. Cadastrar Empresa");
+            System.out.println("3. Avaliar Empresa");
             System.out.println("T. Desligar");
             System.out.print("Opcao: ");
             opcao = Teclado.getUmChar();
-        } while (opcao != '1' && opcao != 'T');
+        } while (opcao != '1' && opcao != '2' && opcao != '3' && opcao != 'T');
 
         switch (opcao) {
             case '1':
@@ -102,10 +100,60 @@ public class Cliente {
                 servidor.receba(pedidoAddUsuario); // Envia para o servidor
                 System.out.println("Pedido enviado para o servidor");
                 break;
+
+            case '2':
+                System.out.print("Nome? ");
+                String nomeEmpresa = Teclado.getUmString();
+                System.out.print("Email? ");
+                String emailEmpresa = Teclado.getUmString();
+                System.out.print("CEP? ");
+                String cep = Teclado.getUmString();
+                System.out.print("Endereço? ");
+                String endereco = Teclado.getUmString();
+                System.out.print("CNPJ? ");
+                String cnpj = Teclado.getUmString();
+                System.out.print("Telefone? ");
+                String telefone = Teclado.getUmString();
+
+                PedidoAddEmpresa pedidoAddEmpresa = new PedidoAddEmpresa(nomeEmpresa, emailEmpresa, cep, endereco, cnpj, telefone);
+                servidor.receba(pedidoAddEmpresa); // Envia para o servidor
+                System.out.println("Pedido enviado para o servidor");
+                break;
+
+            case '3':
+                char avaliarEmpresaOption;
+                boolean validOption2;
+                do {
+                    System.out.print("Avaliar empresa (S/N)? ");
+                    avaliarEmpresaOption = Teclado.getUmChar();
+                    validOption2 = (avaliarEmpresaOption == 'S' || avaliarEmpresaOption == 'N');
+                    if (!validOption2) {
+                        System.out.println("Opção inválida");
+                    }
+
+                    if(avaliarEmpresaOption == 'S'){
+                        System.out.print("Nome do usuário? ");
+                        String nomeUsuario = Teclado.getUmString();
+                        System.out.print("Nome da empresa? ");
+                        String nomeEmpresaAvaliada = Teclado.getUmString();
+                        System.out.print("Nota? ");
+                        int nota = Teclado.getUmInt();
+                        System.out.print("Comentário? ");
+                        String comentario = Teclado.getUmString();
+
+                        PedidoAvaliarEmpresa pedidoAvaliarEmpresa = new PedidoAvaliarEmpresa(nomeUsuario, nomeEmpresaAvaliada, nota, comentario);
+                        servidor.receba(pedidoAvaliarEmpresa); // Envia para o servidor
+                        System.out.println("Pedido enviado para o servidor");
+                    }
+                } while (!validOption2);
+
+
+
+
             case 'T':
                 servidor.receba(new PedidoDesligarServidor());
                 System.out.println("Pedido de desligamento enviado para o servidor");
                 break;
+            }
         }
-    }
 }
