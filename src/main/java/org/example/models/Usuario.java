@@ -1,6 +1,11 @@
 package org.example.models;
 
-public class Usuario  {
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import org.bson.types.ObjectId;
+import org.example.Comunicado;
+
+@BsonDiscriminator
+public class Usuario extends Comunicado {
     private String nome;
     private String email;
     private String dataNascimento;
