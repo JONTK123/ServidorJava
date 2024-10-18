@@ -7,7 +7,9 @@ import org.example.servidor.ComunicadoDeDesligamento;
 public class TratadoraDeComunicadoDeDesligamento extends Thread {
     private Parceiro servidor;
 
-    public TratadoraDeComunicadoDeDesligamento(Parceiro servidor) {
+    public TratadoraDeComunicadoDeDesligamento(Parceiro servidor) throws Exception {
+        if (servidor == null) throw new Exception("Porta inválida");
+
         this.servidor = servidor;
     }
 
