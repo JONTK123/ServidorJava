@@ -8,11 +8,14 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.example.models.Empresa;
 import org.example.models.Usuario;
-import static com.mongodb.client.model.Filters.eq; // Importa o método 'eq'
+
+import static com.mongodb.client.model.Filters.eq;
 
 import java.util.Map;
 import java.util.concurrent.Flow;
 
+
+import static com.mongodb.client.model.Updates.set;
 import static javax.management.Query.eq;
 
 public class BancoDados {
@@ -84,4 +87,26 @@ public class BancoDados {
     }
 
 
+    public void put(String collection, Map<String, Object> parametros)
+
+    {
+        try
+        {
+
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+
+            String campo = parametros.get("campo").toString();
+            String chave = parametros.get("chave").toString();
+            Object novoValor = parametros.get("novoValor");
+
+            colecao.updateOne(eq(campo, chave), set(campo, novoValor));
+
+            System.out.println("Documento atualizado com sucesso");
+
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erro ao atualizar documento:" + e.getMessage());
+        }
+    }
 }

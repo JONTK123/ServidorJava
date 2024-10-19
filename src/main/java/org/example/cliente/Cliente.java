@@ -67,10 +67,11 @@ public class Cliente {
         //Falta implementar TratadoraDeComunicadoDeDesligamento
 
             Map<String, Object> parametrosPUT = new HashMap<String, Object>();
-            Usuario user = new Usuario("Caio", "caiocsgandara@gmail.com", "22/01/1999" );
-            parametrosPUT.put("docNovo", user);
+            parametrosPUT.put("campo", "name");
+            parametrosPUT.put("chave", "Caio Gandara");
+            parametrosPUT.put("novoValor", "Alan Hideo");
 
-            servidor.receba(new PedidoDeOperacao("POST", "Usuario", parametrosPUT));
+            servidor.receba(new PedidoDeOperacao("PUT", "Usuario", parametrosPUT));
             System.out.println("-----------------------------------");
         }
 }
