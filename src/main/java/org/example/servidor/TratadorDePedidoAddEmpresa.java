@@ -1,7 +1,7 @@
 package org.example.servidor;
 
 import org.example.Parceiro;
-import org.example.BancoDados;
+import org.example.database.BancoDados;
 import org.example.cliente.PedidoAddEmpresa;
 
 public class TratadorDePedidoAddEmpresa extends Thread {

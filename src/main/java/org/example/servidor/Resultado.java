@@ -4,21 +4,21 @@ import org.example.Comunicado;
 
 public class Resultado extends Comunicado
 {
-    private boolean statusDaOperacao;
+    private Object resultado;
 
-    public Resultado (boolean statusDaOperacao)
+    public Resultado (boolean resultado)
     {
-        this.statusDaOperacao = statusDaOperacao;
+        this.resultado = resultado;
     }
 
-    public boolean getStatus ()
+    public Object getResultado()
     {
-        return this.statusDaOperacao;
+        return this.resultado;
     }
 
     public String toString ()
     {
-        return (""+this.statusDaOperacao);
+        return (""+this.resultado);
     }
 
 }

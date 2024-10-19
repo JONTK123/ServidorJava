@@ -1,4 +1,4 @@
-package org.example;
+package org.example.database;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -6,7 +6,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.bson.Document;
-import org.example.cliente.PedidoAddEmpresa;
 import org.example.models.Empresa;
 import org.example.models.Usuario;
 
@@ -19,6 +18,12 @@ public class BancoDados {
     public BancoDados() {
         MongoClient mongoClient = MongoClients.create(BancoDados.mongoURI);
         this.database = mongoClient.getDatabase(BancoDados.databaseName);
+    }
+
+    public void get(String collection)
+    {
+        MongoCollection<Document> usuarios = this.database.getCollection(collection);
+        System.out.println(usuarios);
     }
 
     public void addUsuario(Usuario user) {

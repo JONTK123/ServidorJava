@@ -1,6 +1,6 @@
 package org.example.servidor;
 
-import org.example.BancoDados;
+import org.example.database.BancoDados;
 import org.example.Parceiro;
 import org.example.cliente.PedidoAddUsuario;
 

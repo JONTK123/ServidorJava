@@ -1,8 +1,8 @@
 package org.example.servidor;
 
 import org.example.Parceiro;
-import org.example.BancoDados;
-import io.github.cdimascio.dotenv.Dotenv;
+import org.example.database.BancoDados;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
