@@ -151,7 +151,7 @@ public class Cliente {
 
 
             case 'T':
-                servidor.receba(new PedidoDesligarServidor());
+                servidor.receba(new PedidoParaSair());
                 System.out.println("Pedido de desligamento enviado para o servidor");
                 break;
             }
