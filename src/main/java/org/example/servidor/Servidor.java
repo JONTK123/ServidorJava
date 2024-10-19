@@ -1,76 +1,84 @@
 package org.example.servidor;
 
 import org.example.Parceiro;
-import org.example.BancoDados;
-import io.github.cdimascio.dotenv.Dotenv;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import org.example.Teclado;
+import org.example.servidor.AceitadoraDeConexao;
+import org.example.servidor.ComunicadoDeDesligamento;
 
-public class Servidor {
-    public static final int PORTA_PADRAO = 3000;
-    private static final Dotenv dotenv = Dotenv.configure().directory("src").load();
-    private static final String mongoURI = dotenv.get("MONGO_URI");
-    private static boolean running = true;
-    private static List<Parceiro> clientes = new ArrayList<>();
+import java.util.*;
 
-    public static void main(String[] args) throws Exception {
-        if (mongoURI == null) {
-            throw new IllegalArgumentException("MONGO_URI is not set in the .env file");
+public class Servidor
+{
+    public static String PORTA_PADRAO = "3000";
+
+    public static void main (String[] args)
+    {
+        if (args.length>1)
+        {
+            System.err.println ("Uso esperado: java Servidor [PORTA]\n");
+            return;
         }
 
-        ServerSocket servidor = new ServerSocket(PORTA_PADRAO);
-        System.out.println("Servidor iniciado na porta " + PORTA_PADRAO);
+        String porta=Servidor.PORTA_PADRAO;
 
-        BancoDados bancoDados = new BancoDados(mongoURI, "Usuarios");
+        if (args.length==1)
+            porta = args[0];
 
-        while (running) {
-            try {
-                Socket conexao = servidor.accept();
-                ObjectOutputStream transmissor = new ObjectOutputStream(conexao.getOutputStream());
-                ObjectInputStream receptor = new ObjectInputStream(conexao.getInputStream());
+        ArrayList<Parceiro> usuarios =
+                new ArrayList<Parceiro> ();
 
-                Parceiro parceiro = new Parceiro(conexao, receptor, transmissor);
-                clientes.add(parceiro);
-                System.out.println("Conexão estabelecida com " + conexao.getInetAddress().getHostAddress());
+        AceitadoraDeConexao aceitadoraDeConexao=null;
+        try
+        {
+            aceitadoraDeConexao =
+                    new AceitadoraDeConexao(porta, usuarios);
+            aceitadoraDeConexao.start();
+            System.out.println("STARTOU ACEITADORA DE CONEXAO");
+        }
+        catch (Exception erro)
+        {
+            System.err.println ("Escolha uma porta apropriada e liberada para uso!\n");
+            return;
+        }
 
-                // Tratando req do cliente addUsuario
-                TratadoraDePedidoAddUsuario tratadorAddUsuario = new TratadoraDePedidoAddUsuario(parceiro, bancoDados);
-                tratadorAddUsuario.start();
+        for(;;)
+        {
+            System.out.println ("O servidor esta ativo! Para desativa-lo,");
+            System.out.println ("use o comando \"desativar\"\n");
+            System.out.print   ("> ");
 
-                // Tratando req do cliente desligar
-                TratadorDePedidoDesligarServidor tratadorDesligarServidor = new TratadorDePedidoDesligarServidor(parceiro, servidor);
-                tratadorDesligarServidor.start();
+            String comando=null;
+            try
+            {
+                comando = Teclado.getUmString();
+            }
+            catch (Exception erro)
+            {}
 
-                // Tratando req do cliente addEmpresa
-                TratadorDePedidoAddEmpresa tratadorAddEmpresa = new TratadorDePedidoAddEmpresa(parceiro, bancoDados);
-                tratadorAddEmpresa.start();
+            if (comando.toLowerCase().equals("desativar"))
+            {
+                synchronized (usuarios)
+                {
+                    ComunicadoDeDesligamento comunicadoDeDesligamento =
+                            new ComunicadoDeDesligamento ();
 
-                // Tratando req do cliente avaliarEmpresa
-                TratadorDePedidoAvaliarEmpresa tratadorAvaliarEmpresa = new TratadorDePedidoAvaliarEmpresa(parceiro, bancoDados);
-                tratadorAvaliarEmpresa.start();
-
-            } catch (Exception e) {
-                if (!running) {
-                    System.out.println("Servidor desligado.");
-                } else {
-                    e.printStackTrace();
+                    for (Parceiro usuario:usuarios)
+                    {
+                        try
+                        {
+                            usuario.receba (comunicadoDeDesligamento);
+                            usuario.adeus  ();
+                        }
+                        catch (Exception erro)
+                        {}
+                    }
                 }
-            }
-        }
-    }
 
-    public static void shutdown() {
-        running = false;
-        for (Parceiro cliente : clientes) {
-            try {
-                cliente.receba(new ComunicadoDeDesligamento());
-            } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println ("O servidor foi desativado!\n");
+                System.exit(0);
             }
+            else
+                System.err.println ("Comando invalido!\n");
         }
     }
 }

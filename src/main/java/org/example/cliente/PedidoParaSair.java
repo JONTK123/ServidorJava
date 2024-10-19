@@ -2,5 +2,5 @@ package org.example.cliente;
 
 import org.example.Comunicado;
 
-public class PedidoDesligarServidor extends Comunicado
+public class PedidoParaSair extends Comunicado
 {}
