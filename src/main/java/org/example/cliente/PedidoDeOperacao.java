@@ -1,18 +1,21 @@
 package org.example.cliente;
 
 import org.example.Comunicado;
+import org.example.models.Avaliacao;
 import org.example.models.Data;
+import org.example.models.Empresa;
+import org.example.models.Usuario;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PedidoDeOperacao extends Comunicado {
 
 
     private String operacao;
     private String colecao;
-    private String campoChave;
-    private String valorChave;
-    private String novoDocumento;
-    private String campoAlterado;
-    private String novoValor;
+    private Map<String, Object> parametros;
+
 
 
     public PedidoDeOperacao(String operacao, String colecao) //construtor para GET all
@@ -21,62 +24,23 @@ public class PedidoDeOperacao extends Comunicado {
         this.colecao = colecao;
     }
 
-    public PedidoDeOperacao(String operacao, String colecao, String novoDocumento) throws Exception // construtor para PUT
+    public PedidoDeOperacao(String operacao, String colecao, Map<String, Object> parametros) throws Exception // construtor para PUT
     {
-        if(novoDocumento==null) throw new Exception("Documento não encontrado");
+        if(parametros==null) throw new Exception("Parâmetros não encontrado");
 
         this.operacao = operacao;
         this.colecao = colecao;
-        this.novoDocumento = novoDocumento;
+        this.parametros = parametros;
+
     }
 
-
-    public PedidoDeOperacao(String operacao, String colecao, String campoChave, String valorChave, String novoValor, String campoAlterado) throws Exception // construtor para PATCH
-    {
-
-        if(campoChave == null) throw new Exception("campoChave não encontrado");
-
-        if(valorChave == null) throw new Exception ("valorChave não encontrada");
-
-        if(novoValor == null) throw new Exception("Novo valor do campoChave não encontrado");
-
-        if(campoAlterado == null) throw new Exception("Campo a ser alterado não encontrado");
-
-        this.operacao = operacao;
-        this.colecao = colecao;
-        this.campoChave = campoChave;
-        this.valorChave = valorChave;
-        this.novoValor = novoValor;
-        this.campoAlterado = campoAlterado;
-    }
-
-    public PedidoDeOperacao(String operacao, String colecao, String campoChave, String valorChave) throws Exception // construtor para DELETE ou GET baseado em determinado campo e valor
-    {
-
-        if(campoChave == null) throw new Exception("campoChave não encontrado");
-
-        if(valorChave == null) throw new Exception ("valorChave não encontrada");
-
-        this.operacao = operacao;
-        this.colecao = colecao;
-        this.campoChave = campoChave;
-        this.valorChave = valorChave;
-    }
 
 
     public String getOperacao() {return this.operacao;}
 
     public String getColecao() {return this.colecao;}
 
-    public String getcampoChave() {return this.campoChave;}
-
-    public String getvalorChave() {return this.valorChave;}
-
-    public String getNovoDocumento() {return this.novoDocumento;}
-
-    public String getNovoValor() {return this.novoValor;}
-
-    public String getCampoAlterado() {return this.campoAlterado;}
+    public Map<String, Object> getParametros() {return this.parametros;}
     
     
     @Override
@@ -85,23 +49,36 @@ public class PedidoDeOperacao extends Comunicado {
     {
         return "Tipo de operação: " + this.operacao +
                 "\nColeção: " + this.colecao +
-                ((this.campoChave==null)?"": "\nCampo chave: " + this.campoChave) +
-                ((this.valorChave==null)? "": "\nValor do campo chave: " + this.valorChave) +
-                ((this.novoDocumento==null)?"": "\n Novo documento: " + this.novoDocumento) +
-                ((this.campoAlterado==null)?"": "\nCampo a ser alterado: " + this.campoAlterado) +
-                ((this.novoValor==null)?"":"\nNovo valor: " + this.novoValor);
+                ((this.parametros==null)?"":"\nParâmetros: " + this.parametros);
     }
 
 
     public static void main(String[] args) throws Exception {
 
-        Data d1 = new Data((byte) 10, (byte) 10, (byte) 2024);
+        // TESTANDO AS INSTANCIAS
 
+        //REQUISIÇÃO GET ALL
         PedidoDeOperacao getAll = new PedidoDeOperacao("GET", "usuarios");
-
-        PedidoDeOperacao put = new PedidoDeOperacao("PUT", "trajetos", d1.toString());
-
         System.out.println(getAll.toString());
+        System.out.println("");
+
+        //REQUISIÇÃO PUT
+        Map<String, Object> parametrosPUT = new HashMap<String, Object>();
+        Avaliacao avaliacao = new Avaliacao("teste", "empresa", "uma bosta", 5);
+        parametrosPUT.put("docNovo", avaliacao);
+        PedidoDeOperacao put = new PedidoDeOperacao("PUT", "usuarios", parametrosPUT);
         System.out.println(put.toString());
+        System.out.println("");
+
+        //REQUISIÇÃO DELETE
+        Map<String, Object> parametrosDelete = new HashMap<String, Object>();
+        parametrosDelete.put("campoChave", "nome");
+        parametrosDelete.put("nomeCampoChave", "Joao");
+        PedidoDeOperacao delete = new PedidoDeOperacao("DELETE", "usuarios", parametrosDelete);
+
+        System.out.println(delete.toString());
+
+
+
     }
 }
