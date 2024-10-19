@@ -20,7 +20,6 @@ public class TratadorDePedidoDesligarServidor extends Thread {
             Object pedido = parceiro.envie(); // Recebe do cliente
             if (pedido instanceof PedidoParaSair) {
                 System.out.println("Pedido de desligamento recebido. Desligando servidor...");
-                Servidor.shutdown();
                 servidor.close();
             }
         } catch (Exception e) {

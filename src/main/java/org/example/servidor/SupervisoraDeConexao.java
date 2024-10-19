@@ -5,6 +5,8 @@ import org.example.Parceiro;
 import org.example.cliente.PedidoDeOperacao;
 import org.example.cliente.PedidoDeResultado;
 import org.example.cliente.PedidoParaSair;
+import org.example.database.BancoDados;
+import org.example.database.GETRequisition;
 
 import java.net.Socket;
 
@@ -88,7 +90,21 @@ public class SupervisoraDeConexao extends Thread{
 
                     switch (pedidoDeOperacao.getOperacao())
                     {
-                        // tratar tipos de requisições
+                        case "GET":
+
+                            try
+                            {
+                                BancoDados db = new BancoDados();
+
+                                new GETRequisition(db).execute(pedidoDeOperacao);
+
+                            }
+                            catch (Exception erro)
+                            {
+                                System.err.println(erro.getMessage());
+                            }
+
+
                     }
                 }
                 else if (comunicado instanceof PedidoDeResultado)

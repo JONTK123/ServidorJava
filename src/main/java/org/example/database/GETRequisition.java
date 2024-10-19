@@ -14,8 +14,13 @@ public class GETRequisition implements DatabaseExecutor{
 
     @Override
 
-    public void execute(PedidoDeOperacao request)
-    {
-        // METODO GENERICO DO BANCO PARA GET
+    public void execute(PedidoDeOperacao request) {
+        try {
+            this.db.get(request.getColecao());
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erro no metodo execute: " + e.getMessage());
+        }
     }
 }

@@ -51,6 +51,7 @@ public class AceitadoraDeConexao extends Thread
             catch (Exception erro)
             {} // nao vai dar erro
             supervisoraDeConexao.start();
+
         }
     }
 }
