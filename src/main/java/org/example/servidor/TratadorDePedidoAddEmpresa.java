@@ -19,7 +19,7 @@ public class TratadorDePedidoAddEmpresa extends Thread {
             Object pedido = parceiro.envie(); //Recebe do cliente
             if (pedido instanceof PedidoAddEmpresa) {
                 PedidoAddEmpresa pedidoAddEmpresa = (PedidoAddEmpresa) pedido;
-                bancoDados.addEmpresa(pedidoAddEmpresa.getNome(), pedidoAddEmpresa.getCnpj(), pedidoAddEmpresa.getEmail(), pedidoAddEmpresa.getCep(), pedidoAddEmpresa.getEndereco(), pedidoAddEmpresa.getTelefone());
+                //bancoDados.addEmpresa(pedidoAddEmpresa.getNome(), pedidoAddEmpresa.getCnpj(), pedidoAddEmpresa.getEmail(), pedidoAddEmpresa.getCep(), pedidoAddEmpresa.getEndereco(), pedidoAddEmpresa.getTelefone());
                 System.out.println("Empresa cadastrada com sucesso no servidor!");
             }
         } catch (Exception e) {

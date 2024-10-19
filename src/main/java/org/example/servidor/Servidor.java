@@ -12,20 +12,15 @@ import java.util.List;
 
 public class Servidor {
     public static final int PORTA_PADRAO = 3000;
-    private static final Dotenv dotenv = Dotenv.configure().directory("src").load();
-    private static final String mongoURI = dotenv.get("MONGO_URI");
     private static boolean running = true;
     private static List<Parceiro> clientes = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
-        if (mongoURI == null) {
-            throw new IllegalArgumentException("MONGO_URI is not set in the .env file");
-        }
 
         ServerSocket servidor = new ServerSocket(PORTA_PADRAO);
         System.out.println("Servidor iniciado na porta " + PORTA_PADRAO);
 
-        BancoDados bancoDados = new BancoDados(mongoURI, "Usuarios");
+        BancoDados bancoDados = new BancoDados();
 
         while (running) {
             try {

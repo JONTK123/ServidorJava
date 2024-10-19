@@ -4,10 +4,10 @@ public class Usuario {
 
     private String name;
     private String email;
-    private Data birthday;
+    private String birthday;
     private String password;
 
-    public Usuario(String name, String email, Data birthday, String password){
+    public Usuario(String name, String email, String birthday, String password){
         this.name = name;
         this.email = email;
         this.birthday = birthday;
@@ -22,7 +22,7 @@ public class Usuario {
         return this.email;
     }
 
-    public Data getData(){
+    public String getData(){
         return this.birthday;
     }
 
@@ -58,6 +58,5 @@ public class Usuario {
     public String toString(){
         return(this.name+"/"+this.email+"/"+this.birthday+"/"+this.password);
     }
-
 
 }
