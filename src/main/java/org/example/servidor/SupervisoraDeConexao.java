@@ -7,6 +7,7 @@ import org.example.cliente.PedidoDeResultado;
 import org.example.cliente.PedidoParaSair;
 import org.example.database.BancoDados;
 import org.example.database.GETRequisition;
+import org.example.database.POSTRequisition;
 
 import java.net.Socket;
 
@@ -98,6 +99,20 @@ public class SupervisoraDeConexao extends Thread{
 
                                 new GETRequisition(db).execute(pedidoDeOperacao);
 
+                            }
+                            catch (Exception erro)
+                            {
+                                System.err.println(erro.getMessage());
+                            }
+                            break;
+
+                        case "POST":
+
+                            try
+                            {
+                                BancoDados db = new BancoDados();
+
+                                new POSTRequisition(db).execute(pedidoDeOperacao);
                             }
                             catch (Exception erro)
                             {

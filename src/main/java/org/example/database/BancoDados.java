@@ -1,5 +1,6 @@
 package org.example.database;
 
+import com.google.gson.Gson;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Projections;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -9,6 +10,7 @@ import org.example.models.Empresa;
 import org.example.models.Usuario;
 import static com.mongodb.client.model.Filters.eq; // Importa o método 'eq'
 
+import java.util.Map;
 import java.util.concurrent.Flow;
 
 import static javax.management.Query.eq;
@@ -33,6 +35,7 @@ public class BancoDados {
 
     public void get(String collection)
     {
+        //TODO ADD RETURN NA FUNÇAO
 
         try {
 
@@ -51,6 +54,33 @@ public class BancoDados {
             System.err.println("Erro ao buscar docs no banco:" + e.getMessage());
         }
 
+    }
+
+    public void post (String collection, Map<String, Object> parametros)
+
+    {
+        try
+
+        {
+            Gson gson = new Gson();
+
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+
+            String jsonString = gson.toJson(parametros.get("docNovo"));
+
+            Document doc = Document.parse(jsonString);
+
+            colecao.insertOne(doc);
+
+            System.out.println("Documento inserido com sucesso");
+
+
+
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erro ao inserir documento:" + e.getMessage());
+        }
     }
 
 

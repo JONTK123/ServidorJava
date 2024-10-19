@@ -1,6 +1,8 @@
 package org.example.models;
 
-public class Trajeto {
+import java.io.Serializable;
+
+public class Trajeto implements Serializable {
 
     private String company;
     private String origin;

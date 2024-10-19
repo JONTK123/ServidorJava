@@ -1,6 +1,8 @@
 package org.example.models;
 
-public class Empresa {
+import java.io.Serializable;
+
+public class Empresa implements Serializable {
 
     private String name;
     private String email;

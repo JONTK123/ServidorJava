@@ -1,17 +1,17 @@
 package org.example.models;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
 
     private String name;
     private String email;
     private String birthday;
-    private String password;
 
-    public Usuario(String name, String email, String birthday, String password){
+    public Usuario(String name, String email, String birthday){
         this.name = name;
         this.email = email;
         this.birthday = birthday;
-        this.password = password;
     }
 
     public String getName(){
@@ -26,9 +26,6 @@ public class Usuario {
         return this.birthday;
     }
 
-    public String getPassword(){
-        return this.password;
-    }
 
     @Override
     public boolean equals(Object b){
@@ -40,7 +37,6 @@ public class Usuario {
         if(!this.name.equals(other.name)) return false;
         if(!this.email.equals(other.email)) return false;
         if(!this.birthday.equals(other.birthday)) return false;
-        if(!this.password.equals(other.password)) return false;
         return true;
     }
 
@@ -50,13 +46,12 @@ public class Usuario {
         ret = ret * 7 + this.name.hashCode();
         ret = ret * 7 + this.email.hashCode();
         ret = ret * 7 + this.birthday.hashCode();
-        ret = ret * 7 + this.password.hashCode();
         return ret;
     }
 
     @Override
     public String toString(){
-        return(this.name+"/"+this.email+"/"+this.birthday+"/"+this.password);
+        return(this.name+"/"+this.email+"/"+this.birthday);
     }
 
 }
