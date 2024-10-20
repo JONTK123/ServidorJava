@@ -1,16 +1,19 @@
 package org.example.cliente;
 
+import org.example.Comunicado;
 import org.example.Parceiro;
 import org.example.Teclado;
 import org.example.models.Avaliacao;
 import org.example.models.Data;
 import org.example.models.Usuario;
+import org.example.servidor.Resultado;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class Cliente {
 
@@ -59,7 +62,7 @@ public class Cliente {
         try {
             servidor = new Parceiro(conexao, receptor, transmissor);
 
-        } catch (Exception erro) {
+        } catch (Exception error) {
             System.err.println("Indique o servidor e a porta corretos!\n");
             return;
         }
@@ -71,9 +74,15 @@ public class Cliente {
             parametros.put("campo", "name" )  ;
             parametros.put("chave", "Filipe");
 
-            servidor.receba(new PedidoDeOperacao("DELETE", "Usuario", parametros));
-            //aqui é .espie() ou .envie() NÃO SEI AINDA
-            //servidor.envie();
+            servidor.receba(new PedidoDeOperacao("GET", "Usuario"));
+            Comunicado comunicado = null;
+            do{
+
+                comunicado = (Comunicado)servidor.espie();
+
+            }while(!(comunicado instanceof Resultado));
+            Usuario resultado = (Usuario) servidor.envie();
+            System.out.println ("Resultado atual: "+resultado);
 
         }
 }

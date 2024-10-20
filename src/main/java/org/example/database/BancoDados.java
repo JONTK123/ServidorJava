@@ -30,7 +30,7 @@ public class BancoDados {
         }
     }
 
-    public void get(String collection, Map<String, Object> parametros)
+    public Object get(String collection, Map<String, Object> parametros)
     {
 
         try {
@@ -53,13 +53,14 @@ public class BancoDados {
             }
 
             this.mongoClient.close();
+            return docList;
         }
         catch (Exception e)
         {
             System.err.println("Erro ao buscar docs no banco:" + e.getMessage());
             this.mongoClient.close();
+            return null;
         }
-
     }
 
     public String post (String collection, Map<String, Object> parametros)

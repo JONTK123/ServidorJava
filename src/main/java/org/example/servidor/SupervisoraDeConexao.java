@@ -6,6 +6,10 @@ import org.example.cliente.PedidoDeOperacao;
 import org.example.cliente.PedidoDeResultado;
 import org.example.cliente.PedidoParaSair;
 import org.example.database.*;
+import org.example.models.Avaliacao;
+import org.example.models.Empresa;
+import org.example.models.Trajeto;
+import org.example.models.Usuario;
 
 import java.net.Socket;
 
@@ -18,7 +22,7 @@ import java.io.*;
 public class SupervisoraDeConexao extends Thread{
 
     private boolean status = false;
-    private String res;
+    private Object res;
     private Parceiro usuario;
     private Socket conexao;
     private ArrayList<Parceiro> usuarios;
@@ -97,10 +101,24 @@ public class SupervisoraDeConexao extends Thread{
                             try
                             {
                                 BancoDados db = new BancoDados();
-
-                                db.get(colecao, parametros);
-                                //precisa receber o objeto que veio do get e não uma resposta em String
-                                //usuario.receba(new Resultado(this.res));
+                                this.res = db.get(colecao, parametros);
+                                if(colecao.equals("Usuario"))
+                                {
+                                    Usuario resposta = (Usuario) this.res;
+                                    usuario.receba(new Resultado(resposta));
+                                }
+                                if(colecao.equals("Empresa")){
+                                    Empresa resposta = (Empresa) this.res;
+                                    usuario.receba(new Resultado(resposta));
+                                }
+                                if(colecao.equals("Avaliacao")){
+                                    Avaliacao resposta = (Avaliacao) this.res;
+                                    usuario.receba(new Resultado(resposta));
+                                }
+                                if(colecao.equals("Trajeto")){
+                                    Trajeto resposta = (Trajeto) this.res;
+                                    usuario.receba(new Resultado(resposta));
+                                }
 
                             }
                             catch (Exception erro)
@@ -116,7 +134,7 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                db.post(colecao, parametros);
+                                this.res = db.post(colecao, parametros);
                                 usuario.receba(new Resultado(this.res));
                             }
                             catch (Exception erro)

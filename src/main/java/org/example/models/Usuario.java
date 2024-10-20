@@ -1,8 +1,10 @@
 package org.example.models;
 
+import org.example.Comunicado;
+
 import java.io.Serializable;
 
-public class Usuario implements Serializable {
+public class Usuario extends Comunicado {
 
     private String name;
     private String email;

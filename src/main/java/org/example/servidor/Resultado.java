@@ -6,7 +6,7 @@ public class Resultado extends Comunicado
 {
     private Object resultado;
 
-    public Resultado (String resultado)
+    public Resultado (Object resultado)
     {
         this.resultado = resultado;
     }
