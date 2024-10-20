@@ -6,7 +6,7 @@ public class Resultado extends Comunicado
 {
     private Object resultado;
 
-    public Resultado (boolean resultado)
+    public Resultado (String resultado)
     {
         this.resultado = resultado;
     }

@@ -72,6 +72,8 @@ public class Cliente {
             parametros.put("chave", "Filipe");
 
             servidor.receba(new PedidoDeOperacao("DELETE", "Usuario", parametros));
+            //aqui é .espie() ou .envie() NÃO SEI AINDA
+            //servidor.envie();
 
         }
 }

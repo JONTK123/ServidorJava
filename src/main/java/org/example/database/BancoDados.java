@@ -62,7 +62,7 @@ public class BancoDados {
 
     }
 
-    public void post (String collection, Map<String, Object> parametros)
+    public String post (String collection, Map<String, Object> parametros)
 
     {
         try
@@ -81,7 +81,7 @@ public class BancoDados {
             System.out.println("Documento inserido com sucesso");
 
             this.mongoClient.close();
-
+            return("Documento inserido com sucesso");
 
 
         }
@@ -89,11 +89,12 @@ public class BancoDados {
         {
             System.err.println("Erro ao inserir documento:" + e.getMessage());
             this.mongoClient.close();
+            return("Erro ao inserir o documento");
         }
     }
 
 
-    public void put(String collection, Map<String, Object> parametros)
+    public String put(String collection, Map<String, Object> parametros)
 
     {
         try
@@ -110,17 +111,19 @@ public class BancoDados {
             System.out.println("Documento atualizado com sucesso");
 
             this.mongoClient.close();
+            return("Documento atualizado com sucesso");
 
         }
         catch (Exception e)
         {
             System.err.println("Erro ao atualizar documento:" + e.getMessage());
             this.mongoClient.close();
+            return("Erro ao atualizar documento");
         }
     }
 
 
-    public void delete(String collection, Map<String, Object> parametros)
+    public String delete(String collection, Map<String, Object> parametros)
     {
         try
         {
@@ -132,11 +135,13 @@ public class BancoDados {
 
             System.out.println("Documento deletado com sucesso");
             this.mongoClient.close();
+            return("Documento deletado com sucesso");
         }
         catch (Exception e)
         {
             System.err.println("Erro ao deletar documento:" + e.getMessage());
             this.mongoClient.close();
+            return("Erro ao deletar o documento");
         }
     }
 }

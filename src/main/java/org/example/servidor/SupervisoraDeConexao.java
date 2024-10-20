@@ -18,6 +18,7 @@ import java.io.*;
 public class SupervisoraDeConexao extends Thread{
 
     private boolean status = false;
+    private String res;
     private Parceiro usuario;
     private Socket conexao;
     private ArrayList<Parceiro> usuarios;
@@ -98,6 +99,8 @@ public class SupervisoraDeConexao extends Thread{
                                 BancoDados db = new BancoDados();
 
                                 db.get(colecao, parametros);
+                                //precisa receber o objeto que veio do get e não uma resposta em String
+                                //usuario.receba(new Resultado(this.res));
 
                             }
                             catch (Exception erro)
@@ -114,6 +117,7 @@ public class SupervisoraDeConexao extends Thread{
                                 BancoDados db = new BancoDados();
 
                                 db.post(colecao, parametros);
+                                usuario.receba(new Resultado(this.res));
                             }
                             catch (Exception erro)
                             {
@@ -128,7 +132,8 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                db.put(colecao, parametros);
+                                this.res = db.put(colecao, parametros);
+                                usuario.receba(new Resultado(this.res));
                             }
                             catch (Exception erro)
                             {
@@ -143,7 +148,8 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                db.delete(colecao, parametros);
+                                this.res = db.delete(colecao, parametros);
+                                usuario.receba(new Resultado(this.res));
                             }
                             catch (Exception erro)
                             {
@@ -155,7 +161,7 @@ public class SupervisoraDeConexao extends Thread{
                 }
                 else if (comunicado instanceof PedidoDeResultado)
                 {
-                    this.usuario.receba (new Resultado (this.status));
+                    //this.usuario.receba (new Resultado (this.res));
                 }
                 else if (comunicado instanceof PedidoParaSair)
                 {
