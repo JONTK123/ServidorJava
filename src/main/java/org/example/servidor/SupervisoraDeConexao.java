@@ -96,6 +96,7 @@ public class SupervisoraDeConexao extends Thread{
                                 BancoDados db = new BancoDados();
 
                                 new GETRequisition(db).execute(pedidoDeOperacao);
+                                
 
                             }
                             catch (Exception erro)

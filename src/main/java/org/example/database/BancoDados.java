@@ -45,16 +45,19 @@ public class BancoDados {
             {
                 String chave = (String) parametros.get("chave");
                 String valor = (String) parametros.get("valor");
-                docList = colecao.find(eq(chave, parametros.get("valor")));
+                docList = colecao.find(eq(chave, valor));
             }
 
             for (Document doc : docList) {
                 System.out.println(doc.toJson());
             }
+
+            this.mongoClient.close();
         }
         catch (Exception e)
         {
             System.err.println("Erro ao buscar docs no banco:" + e.getMessage());
+            this.mongoClient.close();
         }
 
     }
@@ -77,12 +80,15 @@ public class BancoDados {
 
             System.out.println("Documento inserido com sucesso");
 
+            this.mongoClient.close();
+
 
 
         }
         catch (Exception e)
         {
             System.err.println("Erro ao inserir documento:" + e.getMessage());
+            this.mongoClient.close();
         }
     }
 
@@ -103,10 +109,13 @@ public class BancoDados {
 
             System.out.println("Documento atualizado com sucesso");
 
+            this.mongoClient.close();
+
         }
         catch (Exception e)
         {
             System.err.println("Erro ao atualizar documento:" + e.getMessage());
+            this.mongoClient.close();
         }
     }
 
@@ -122,10 +131,12 @@ public class BancoDados {
             colecao.deleteOne(eq(campo, chave));
 
             System.out.println("Documento deletado com sucesso");
+            this.mongoClient.close();
         }
         catch (Exception e)
         {
             System.err.println("Erro ao deletar documento:" + e.getMessage());
+            this.mongoClient.close();
         }
     }
 }
