@@ -5,10 +5,7 @@ import org.example.Parceiro;
 import org.example.cliente.PedidoDeOperacao;
 import org.example.cliente.PedidoDeResultado;
 import org.example.cliente.PedidoParaSair;
-import org.example.database.BancoDados;
-import org.example.database.GETRequisition;
-import org.example.database.POSTRequisition;
-import org.example.database.PUTRequisition;
+import org.example.database.*;
 
 import java.net.Socket;
 
@@ -133,6 +130,21 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 System.err.println(erro.getMessage());
                             }
+                            break;
+
+                        case "DELETE":
+
+                            try
+                            {
+                                BancoDados db = new BancoDados();
+
+                                new DELETERequisition(db).execute(pedidoDeOperacao);
+                            }
+                            catch (Exception erro)
+                            {
+                                System.err.println(erro.getMessage());
+                            }
+                            break;
 
 
 

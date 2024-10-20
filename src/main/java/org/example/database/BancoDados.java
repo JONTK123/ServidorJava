@@ -109,4 +109,23 @@ public class BancoDados {
             System.err.println("Erro ao atualizar documento:" + e.getMessage());
         }
     }
+
+
+    public void delete(String collection, Map<String, Object> parametros)
+    {
+        try
+        {
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+            String campo = parametros.get("campo").toString();
+            String chave = parametros.get("chave").toString();
+
+            colecao.deleteOne(eq(campo, chave));
+
+            System.out.println("Documento deletado com sucesso");
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erro ao deletar documento:" + e.getMessage());
+        }
+    }
 }

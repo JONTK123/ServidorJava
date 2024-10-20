@@ -68,10 +68,9 @@ public class Cliente {
 
             Map<String, Object> parametrosPUT = new HashMap<String, Object>();
             parametrosPUT.put("campo", "name");
-            parametrosPUT.put("chave", "Caio Gandara");
-            parametrosPUT.put("novoValor", "Alan Hideo");
+            parametrosPUT.put("chave", "Alan Hideo");
 
-            servidor.receba(new PedidoDeOperacao("PUT", "Usuario", parametrosPUT));
+            servidor.receba(new PedidoDeOperacao("DELETE", "Usuario", parametrosPUT));
             System.out.println("-----------------------------------");
         }
 }
