@@ -71,7 +71,6 @@ public class Cliente {
             parametros.put("campo", "name" )  ;
             parametros.put("chave", "Filipe");
 
-
             servidor.receba(new PedidoDeOperacao("DELETE", "Usuario", parametros));
 
         }
