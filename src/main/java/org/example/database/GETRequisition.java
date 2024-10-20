@@ -14,13 +14,14 @@ public class GETRequisition implements DatabaseExecutor{
 
     @Override
 
-    public void execute(PedidoDeOperacao request) {
+    public Object execute(PedidoDeOperacao request) {
         try {
-            this.db.get(request.getColecao(), request.getParametros());
+            return this.db.get(request.getColecao(), request.getParametros());
         }
         catch (Exception e)
         {
             System.err.println("Erro no metodo execute: " + e.getMessage());
+            return "Falha ao recuperar os dados";
         }
     }
 }

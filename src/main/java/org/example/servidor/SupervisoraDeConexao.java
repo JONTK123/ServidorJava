@@ -1,5 +1,6 @@
 package org.example.servidor;
 
+import com.google.gson.Gson;
 import org.example.Comunicado;
 import org.example.Parceiro;
 import org.example.cliente.PedidoDeOperacao;
@@ -17,7 +18,7 @@ import java.io.*;
 
 public class SupervisoraDeConexao extends Thread{
 
-    private boolean status = false;
+    private String res;
     private Parceiro usuario;
     private Socket conexao;
     private ArrayList<Parceiro> usuarios;
@@ -95,7 +96,11 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new GETRequisition(db).execute(pedidoDeOperacao);
+                                Object obj = new GETRequisition(db).execute(pedidoDeOperacao);
+
+                                Gson gson = new Gson();
+
+                                this.res = gson.toJson(obj);
                                 
 
                             }
@@ -111,7 +116,7 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new POSTRequisition(db).execute(pedidoDeOperacao);
+                                this.res = (String) new POSTRequisition(db).execute(pedidoDeOperacao);
                             }
                             catch (Exception erro)
                             {
@@ -125,7 +130,7 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new PUTRequisition(db).execute(pedidoDeOperacao);
+                                this.res = (String) new PUTRequisition(db).execute(pedidoDeOperacao);
                             }
                             catch (Exception erro)
                             {
@@ -139,7 +144,7 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new DELETERequisition(db).execute(pedidoDeOperacao);
+                                this.res = (String) new DELETERequisition(db).execute(pedidoDeOperacao);
                             }
                             catch (Exception erro)
                             {
@@ -153,7 +158,7 @@ public class SupervisoraDeConexao extends Thread{
                 }
                 else if (comunicado instanceof PedidoDeResultado)
                 {
-                    this.usuario.receba (new Resultado (this.status));
+                    this.usuario.receba (new Resultado (this.res));
                 }
                 else if (comunicado instanceof PedidoParaSair)
                 {

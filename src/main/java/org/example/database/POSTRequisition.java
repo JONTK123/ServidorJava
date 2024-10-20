@@ -17,15 +17,17 @@ public class POSTRequisition implements DatabaseExecutor {
 
     @Override
 
-    public void execute(PedidoDeOperacao request)
+    public Object execute(PedidoDeOperacao request)
     {
         try
         {
             this.db.post(request.getColecao(), request.getParametros());
+            return "Registro realizado com sucesso";
         }
         catch(Exception e)
         {
             System.out.println(e.getMessage());
+            return "Falha no registro";
         }
     }
 }

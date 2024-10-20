@@ -1,10 +1,12 @@
 package org.example.cliente;
 
+import org.example.Comunicado;
 import org.example.Parceiro;
 import org.example.Teclado;
 import org.example.models.Avaliacao;
 import org.example.models.Data;
 import org.example.models.Usuario;
+import org.example.servidor.Resultado;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -66,13 +68,22 @@ public class Cliente {
 
         //Falta implementar TratadoraDeComunicadoDeDesligamento
 
-            Map<String, Object> parametros = new HashMap<String, Object>();
-
-            parametros.put("chave", "name");
-            parametros.put("valor", "Alan");
-
+            Map<String, Object> parametros = null;
 
             servidor.receba(new PedidoDeOperacao("GET", "Usuario", parametros));
-            System.out.println("-----------------------------------");
+
+            servidor.receba(new PedidoDeResultado());
+
+        {
+            servidor.receba (new PedidoDeResultado ());
+            Comunicado comunicado = null;
+            do
+            {
+                comunicado = (Comunicado)servidor.espie ();
+            }
+            while (!(comunicado instanceof Resultado));
+            Resultado resultado = (Resultado)servidor.envie ();
+            System.out.println (resultado.getResultado()+"\n");
+        }
         }
 }

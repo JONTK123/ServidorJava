@@ -17,15 +17,17 @@ public class PUTRequisition implements DatabaseExecutor {
 
     @Override
 
-    public void execute(PedidoDeOperacao request)
+    public Object execute(PedidoDeOperacao request)
     {
         try
         {
             this.db.put(request.getColecao(), request.getParametros());
+            return "Alteração realizada com sucesso";
         }
         catch(Exception e)
         {
             System.out.println(e.getMessage());
+            return "Falha na alteração";
         }
     }
 }

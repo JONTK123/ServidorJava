@@ -17,15 +17,17 @@ public class DELETERequisition implements DatabaseExecutor {
 
     @Override
 
-    public void execute(PedidoDeOperacao request)
+    public Object execute(PedidoDeOperacao request)
     {
         try
         {
             this.db.delete(request.getColecao(), request.getParametros());
+            return "Registro deletado com sucesso.";
         }
         catch(Exception e)
         {
             System.out.println(e.getMessage());
+            return "Falha ao deletar registro";
         }
     }
 }

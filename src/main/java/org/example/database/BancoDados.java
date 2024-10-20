@@ -7,6 +7,7 @@ import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -30,7 +31,7 @@ public class BancoDados {
         }
     }
 
-    public void get(String collection, Map<String, Object> parametros)
+    public Object get(String collection, Map<String, Object> parametros)
     {
 
         try {
@@ -47,17 +48,19 @@ public class BancoDados {
                 String valor = (String) parametros.get("valor");
                 docList = colecao.find(eq(chave, valor));
             }
-
+            ArrayList<Object> ret = new ArrayList<>();
             for (Document doc : docList) {
+                ret.add(doc.toJson());
                 System.out.println(doc.toJson());
             }
-
             this.mongoClient.close();
+            return ret;
         }
         catch (Exception e)
         {
             System.err.println("Erro ao buscar docs no banco:" + e.getMessage());
             this.mongoClient.close();
+            return "Falha ao recuperar os dados.";
         }
 
     }
