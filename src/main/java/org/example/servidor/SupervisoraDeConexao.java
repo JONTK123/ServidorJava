@@ -86,6 +86,8 @@ public class SupervisoraDeConexao extends Thread{
                 else if (comunicado instanceof PedidoDeOperacao)
                 {
                     PedidoDeOperacao pedidoDeOperacao = (PedidoDeOperacao)comunicado;
+                    String colecao = pedidoDeOperacao.getColecao ();
+                    Map<String, Object> parametros= pedidoDeOperacao.getParametros();
 
                     switch (pedidoDeOperacao.getOperacao())
                     {
@@ -95,8 +97,7 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new GETRequisition(db).execute(pedidoDeOperacao);
-                                
+                                db.get(colecao, parametros);
 
                             }
                             catch (Exception erro)
@@ -104,6 +105,7 @@ public class SupervisoraDeConexao extends Thread{
                                 System.err.println(erro.getMessage());
                             }
                             break;
+
 
                         case "POST":
 
@@ -111,13 +113,14 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new POSTRequisition(db).execute(pedidoDeOperacao);
+                                db.post(colecao, parametros);
                             }
                             catch (Exception erro)
                             {
                                 System.err.println(erro.getMessage());
                             }
                             break;
+
 
                         case "PUT":
 
@@ -125,13 +128,14 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new PUTRequisition(db).execute(pedidoDeOperacao);
+                                db.put(colecao, parametros);
                             }
                             catch (Exception erro)
                             {
                                 System.err.println(erro.getMessage());
                             }
                             break;
+
 
                         case "DELETE":
 
@@ -139,15 +143,13 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
 
-                                new DELETERequisition(db).execute(pedidoDeOperacao);
+                                db.delete(colecao, parametros);
                             }
                             catch (Exception erro)
                             {
                                 System.err.println(erro.getMessage());
                             }
                             break;
-
-
 
                     }
                 }

@@ -68,11 +68,11 @@ public class Cliente {
 
             Map<String, Object> parametros = new HashMap<String, Object>();
 
-            parametros.put("chave", "name");
-            parametros.put("valor", "Alan");
+            parametros.put("campo", "name" )  ;
+            parametros.put("chave", "Filipe");
 
 
-            servidor.receba(new PedidoDeOperacao("GET", "Usuario", parametros));
-            System.out.println("-----------------------------------");
+            servidor.receba(new PedidoDeOperacao("DELETE", "Usuario", parametros));
+
         }
 }
