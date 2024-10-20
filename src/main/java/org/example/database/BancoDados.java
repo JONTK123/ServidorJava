@@ -2,21 +2,15 @@ package org.example.database;
 
 import com.google.gson.Gson;
 import com.mongodb.client.*;
-import com.mongodb.client.model.Projections;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.example.models.Empresa;
-import org.example.models.Usuario;
 
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.Map;
-import java.util.concurrent.Flow;
 
 
 import static com.mongodb.client.model.Updates.set;
-import static javax.management.Query.eq;
 
 public class BancoDados {
     private MongoClient mongoClient;
@@ -36,19 +30,25 @@ public class BancoDados {
         }
     }
 
-    public void get(String collection)
+    public void get(String collection, Map<String, Object> parametros)
     {
-        //TODO ADD RETURN NA FUNÇAO
 
         try {
 
             MongoCollection<Document> colecao = this.database.getCollection(collection);
 
-            Bson projectionFields = Projections.fields(
-                    Projections.include("name", "email", "birthday", "password"),
-                    Projections.excludeId());
+            FindIterable<Document> docList;
 
-            for (Document doc : colecao.find().projection(projectionFields)) {
+            if(parametros==null) docList = colecao.find();
+
+            else
+            {
+                String chave = (String) parametros.get("chave");
+                String valor = (String) parametros.get("valor");
+                docList = colecao.find(eq(chave, parametros.get("valor")));
+            }
+
+            for (Document doc : docList) {
                 System.out.println(doc.toJson());
             }
         }
