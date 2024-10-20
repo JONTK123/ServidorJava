@@ -2,10 +2,15 @@ package org.example.cliente;
 
 import org.example.Parceiro;
 import org.example.Teclado;
+import org.example.models.Avaliacao;
 import org.example.models.Data;
+import org.example.models.Usuario;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cliente {
 
@@ -61,7 +66,13 @@ public class Cliente {
 
         //Falta implementar TratadoraDeComunicadoDeDesligamento
 
-            servidor.receba(new PedidoDeOperacao("GET", "Usuario"));
+            Map<String, Object> parametros = new HashMap<String, Object>();
+
+            parametros.put("chave", "name");
+            parametros.put("valor", "Alan");
+
+
+            servidor.receba(new PedidoDeOperacao("GET", "Usuario", parametros));
             System.out.println("-----------------------------------");
         }
 }

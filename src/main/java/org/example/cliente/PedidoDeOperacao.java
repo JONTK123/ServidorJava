@@ -24,13 +24,14 @@ public class PedidoDeOperacao extends Comunicado {
         this.colecao = colecao;
     }
 
-    public PedidoDeOperacao(String operacao, String colecao, Map<String, Object> parametros) throws Exception // construtor para PUT
-    {
-        if(parametros==null) throw new Exception("Parâmetros não encontrado");
+    public PedidoDeOperacao(String operacao, String colecao, Map<String, Object> parametros)
 
+    {
         this.operacao = operacao;
         this.colecao = colecao;
         this.parametros = parametros;
+
+        System.out.println("Objeto contruido");
 
     }
 

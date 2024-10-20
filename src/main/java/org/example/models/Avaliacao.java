@@ -1,6 +1,8 @@
 package org.example.models;
 
-public class Avaliacao {
+import java.io.Serializable;
+
+public class Avaliacao implements Serializable {
     private String user;
     private String company;
     private String comment;

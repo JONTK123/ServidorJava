@@ -1,17 +1,16 @@
 package org.example.database;
 
+import com.google.gson.Gson;
 import com.mongodb.client.*;
-import com.mongodb.client.model.Projections;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.example.models.Empresa;
-import org.example.models.Usuario;
-import static com.mongodb.client.model.Filters.eq; // Importa o método 'eq'
 
-import java.util.concurrent.Flow;
+import static com.mongodb.client.model.Filters.eq;
 
-import static javax.management.Query.eq;
+import java.util.Map;
+
+
+import static com.mongodb.client.model.Updates.set;
 
 public class BancoDados {
     private MongoClient mongoClient;
@@ -31,27 +30,113 @@ public class BancoDados {
         }
     }
 
-    public void get(String collection)
+    public void get(String collection, Map<String, Object> parametros)
     {
 
         try {
 
             MongoCollection<Document> colecao = this.database.getCollection(collection);
 
-            Bson projectionFields = Projections.fields(
-                    Projections.include("name", "email", "birthday", "password"),
-                    Projections.excludeId());
+            FindIterable<Document> docList;
 
-            for (Document doc : colecao.find().projection(projectionFields)) {
+            if(parametros==null) docList = colecao.find();
+
+            else
+            {
+                String chave = (String) parametros.get("chave");
+                String valor = (String) parametros.get("valor");
+                docList = colecao.find(eq(chave, valor));
+            }
+
+            for (Document doc : docList) {
                 System.out.println(doc.toJson());
             }
+
+            this.mongoClient.close();
         }
         catch (Exception e)
         {
             System.err.println("Erro ao buscar docs no banco:" + e.getMessage());
+            this.mongoClient.close();
         }
 
     }
 
+    public void post (String collection, Map<String, Object> parametros)
 
+    {
+        try
+
+        {
+            Gson gson = new Gson();
+
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+
+            String jsonString = gson.toJson(parametros.get("docNovo"));
+
+            Document doc = Document.parse(jsonString);
+
+            colecao.insertOne(doc);
+
+            System.out.println("Documento inserido com sucesso");
+
+            this.mongoClient.close();
+
+
+
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erro ao inserir documento:" + e.getMessage());
+            this.mongoClient.close();
+        }
+    }
+
+
+    public void put(String collection, Map<String, Object> parametros)
+
+    {
+        try
+        {
+
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+
+            String campo = parametros.get("campo").toString();
+            String chave = parametros.get("chave").toString();
+            Object novoValor = parametros.get("novoValor");
+
+            colecao.updateOne(eq(campo, chave), set(campo, novoValor));
+
+            System.out.println("Documento atualizado com sucesso");
+
+            this.mongoClient.close();
+
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erro ao atualizar documento:" + e.getMessage());
+            this.mongoClient.close();
+        }
+    }
+
+
+    public void delete(String collection, Map<String, Object> parametros)
+    {
+        try
+        {
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+            String campo = parametros.get("campo").toString();
+            String chave = parametros.get("chave").toString();
+
+            colecao.deleteOne(eq(campo, chave));
+
+            System.out.println("Documento deletado com sucesso");
+            this.mongoClient.close();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erro ao deletar documento:" + e.getMessage());
+            this.mongoClient.close();
+        }
+    }
 }

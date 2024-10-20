@@ -16,7 +16,7 @@ public class GETRequisition implements DatabaseExecutor{
 
     public void execute(PedidoDeOperacao request) {
         try {
-            this.db.get(request.getColecao());
+            this.db.get(request.getColecao(), request.getParametros());
         }
         catch (Exception e)
         {
