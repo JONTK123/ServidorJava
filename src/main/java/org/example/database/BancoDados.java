@@ -7,6 +7,7 @@ import org.bson.Document;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -47,13 +48,14 @@ public class BancoDados {
                 String valor = (String) parametros.get("valor");
                 docList = colecao.find(eq(chave, valor));
             }
-
+            ArrayList<Document> lista = new ArrayList<Document>();
             for (Document doc : docList) {
+                lista.add(doc);
                 System.out.println(doc.toJson());
             }
 
             this.mongoClient.close();
-            return docList;
+            return lista;
         }
         catch (Exception e)
         {

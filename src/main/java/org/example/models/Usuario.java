@@ -4,7 +4,7 @@ import org.example.Comunicado;
 
 import java.io.Serializable;
 
-public class Usuario extends Comunicado {
+public class Usuario implements Serializable {
 
     private String name;
     private String email;

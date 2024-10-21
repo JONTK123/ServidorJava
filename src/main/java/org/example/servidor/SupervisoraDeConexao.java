@@ -102,23 +102,7 @@ public class SupervisoraDeConexao extends Thread{
                             {
                                 BancoDados db = new BancoDados();
                                 this.res = db.get(colecao, parametros);
-                                if(colecao.equals("Usuario"))
-                                {
-                                    Usuario resposta = (Usuario) this.res;
-                                    usuario.receba(new Resultado(resposta));
-                                }
-                                if(colecao.equals("Empresa")){
-                                    Empresa resposta = (Empresa) this.res;
-                                    usuario.receba(new Resultado(resposta));
-                                }
-                                if(colecao.equals("Avaliacao")){
-                                    Avaliacao resposta = (Avaliacao) this.res;
-                                    usuario.receba(new Resultado(resposta));
-                                }
-                                if(colecao.equals("Trajeto")){
-                                    Trajeto resposta = (Trajeto) this.res;
-                                    usuario.receba(new Resultado(resposta));
-                                }
+
 
                             }
                             catch (Exception erro)
@@ -179,7 +163,7 @@ public class SupervisoraDeConexao extends Thread{
                 }
                 else if (comunicado instanceof PedidoDeResultado)
                 {
-                    //this.usuario.receba (new Resultado (this.res));
+                    this.usuario.receba (new Resultado (this.res));
                 }
                 else if (comunicado instanceof PedidoParaSair)
                 {

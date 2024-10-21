@@ -71,18 +71,19 @@ public class Cliente {
 
             Map<String, Object> parametros = new HashMap<String, Object>();
 
-            parametros.put("campo", "name" )  ;
-            parametros.put("chave", "Filipe");
+            parametros = null;
 
             servidor.receba(new PedidoDeOperacao("GET", "Usuario"));
+            servidor.receba(new PedidoDeResultado());
+
             Comunicado comunicado = null;
             do{
 
                 comunicado = (Comunicado)servidor.espie();
 
             }while(!(comunicado instanceof Resultado));
-            Usuario resultado = (Usuario) servidor.envie();
-            System.out.println ("Resultado atual: "+resultado);
+            Resultado resultado = (Resultado) servidor.envie();
+            System.out.println ("Resultado atual: "+resultado.getResultado());
 
         }
 }

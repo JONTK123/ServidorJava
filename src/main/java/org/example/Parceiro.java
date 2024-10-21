@@ -55,7 +55,7 @@ public class Parceiro {
         }
         catch (Exception erro)
         {
-            throw new Exception ("Erro de recepcao");
+            throw new Exception ("Erro de recepcao: " + erro.getMessage());
         }
     }
 
