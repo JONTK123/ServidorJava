@@ -48,9 +48,9 @@ public class BancoDados {
                 String valor = (String) parametros.get("valor");
                 docList = colecao.find(eq(chave, valor));
             }
-            ArrayList<Document> lista = new ArrayList<Document>();
+            ArrayList<Object> lista = new ArrayList<Object>();
             for (Document doc : docList) {
-                lista.add(doc);
+                lista.add(doc.toJson());
                 System.out.println(doc.toJson());
             }
 

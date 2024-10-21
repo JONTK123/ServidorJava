@@ -1,5 +1,6 @@
 package org.example.cliente;
 
+import org.bson.Document;
 import org.example.Comunicado;
 import org.example.Parceiro;
 import org.example.Teclado;
@@ -11,6 +12,7 @@ import org.example.servidor.Resultado;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -83,7 +85,10 @@ public class Cliente {
 
             }while(!(comunicado instanceof Resultado));
             Resultado resultado = (Resultado) servidor.envie();
+
+
             System.out.println ("Resultado atual: "+resultado.getResultado());
+
 
         }
 }
