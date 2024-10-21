@@ -1,5 +1,6 @@
 package org.example.servidor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.Comunicado;
 import org.example.Parceiro;
 import org.example.cliente.PedidoDeOperacao;
@@ -84,7 +85,10 @@ public class SupervisoraDeConexao extends Thread{
 
             for(;;)
             {
-                Comunicado comunicado = this.usuario.envie ();
+//                Comunicado comunicado = this.usuario.envie ();
+
+                 String JASON = this.usuario.envie ();
+                 Comunicado comunicado = new PedidoDeOperacao("POST", "Usuario", JASON);
 
                 if (comunicado==null)
                     return;
@@ -92,26 +96,10 @@ public class SupervisoraDeConexao extends Thread{
                 {
                     PedidoDeOperacao pedidoDeOperacao = (PedidoDeOperacao)comunicado;
                     String colecao = pedidoDeOperacao.getColecao ();
-                    Map<String, Object> parametros= pedidoDeOperacao.getParametros();
+                    String parametros= pedidoDeOperacao.getParametros();
 
                     switch (pedidoDeOperacao.getOperacao())
                     {
-                        case "GET":
-
-                            try
-                            {
-                                BancoDados db = new BancoDados();
-                                this.res = db.get(colecao, parametros);
-
-
-                            }
-                            catch (Exception erro)
-                            {
-                                System.err.println(erro.getMessage());
-                            }
-                            break;
-
-
                         case "POST":
 
                             try
@@ -119,7 +107,7 @@ public class SupervisoraDeConexao extends Thread{
                                 BancoDados db = new BancoDados();
 
                                 this.res = db.post(colecao, parametros);
-                                usuario.receba(new Resultado(this.res));
+                                usuario.receba(String.valueOf(new Resultado(this.res)));
                             }
                             catch (Exception erro)
                             {
@@ -127,43 +115,12 @@ public class SupervisoraDeConexao extends Thread{
                             }
                             break;
 
-
-                        case "PUT":
-
-                            try
-                            {
-                                BancoDados db = new BancoDados();
-
-                                this.res = db.put(colecao, parametros);
-                                usuario.receba(new Resultado(this.res));
-                            }
-                            catch (Exception erro)
-                            {
-                                System.err.println(erro.getMessage());
-                            }
-                            break;
-
-
-                        case "DELETE":
-
-                            try
-                            {
-                                BancoDados db = new BancoDados();
-
-                                this.res = db.delete(colecao, parametros);
-                                usuario.receba(new Resultado(this.res));
-                            }
-                            catch (Exception erro)
-                            {
-                                System.err.println(erro.getMessage());
-                            }
-                            break;
 
                     }
                 }
                 else if (comunicado instanceof PedidoDeResultado)
                 {
-                    this.usuario.receba (new Resultado (this.res));
+                    this.usuario.receba (String.valueOf(new Resultado(this.res)));
                 }
                 else if (comunicado instanceof PedidoParaSair)
                 {

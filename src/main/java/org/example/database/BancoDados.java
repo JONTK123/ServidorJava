@@ -1,6 +1,5 @@
 package org.example.database;
 
-import com.google.gson.Gson;
 import com.mongodb.client.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.bson.Document;
@@ -8,7 +7,6 @@ import org.bson.Document;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
 import static com.mongodb.client.model.Updates.set;
@@ -31,53 +29,17 @@ public class BancoDados {
         }
     }
 
-    public Object get(String collection, Map<String, Object> parametros)
-    {
 
-        try {
-
-            MongoCollection<Document> colecao = this.database.getCollection(collection);
-
-            FindIterable<Document> docList;
-
-            if(parametros==null) docList = colecao.find();
-
-            else
-            {
-                String chave = (String) parametros.get("chave");
-                String valor = (String) parametros.get("valor");
-                docList = colecao.find(eq(chave, valor));
-            }
-            ArrayList<Object> lista = new ArrayList<Object>();
-            for (Document doc : docList) {
-                lista.add(doc.toJson());
-                System.out.println(doc.toJson());
-            }
-
-            this.mongoClient.close();
-            return lista;
-        }
-        catch (Exception e)
-        {
-            System.err.println("Erro ao buscar docs no banco:" + e.getMessage());
-            this.mongoClient.close();
-            return null;
-        }
-    }
-
-    public String post (String collection, Map<String, Object> parametros)
+    public String post (String collection, String parametros)
 
     {
         try
 
         {
-            Gson gson = new Gson();
 
             MongoCollection<Document> colecao = this.database.getCollection(collection);
 
-            String jsonString = gson.toJson(parametros.get("docNovo"));
-
-            Document doc = Document.parse(jsonString);
+            Document doc = Document.parse(parametros);
 
             colecao.insertOne(doc);
 
@@ -97,54 +59,5 @@ public class BancoDados {
     }
 
 
-    public String put(String collection, Map<String, Object> parametros)
 
-    {
-        try
-        {
-
-            MongoCollection<Document> colecao = this.database.getCollection(collection);
-
-            String campo = parametros.get("campo").toString();
-            String chave = parametros.get("chave").toString();
-            Object novoValor = parametros.get("novoValor");
-
-            colecao.updateOne(eq(campo, chave), set(campo, novoValor));
-
-            System.out.println("Documento atualizado com sucesso");
-
-            this.mongoClient.close();
-            return("Documento atualizado com sucesso");
-
-        }
-        catch (Exception e)
-        {
-            System.err.println("Erro ao atualizar documento:" + e.getMessage());
-            this.mongoClient.close();
-            return("Erro ao atualizar documento");
-        }
-    }
-
-
-    public String delete(String collection, Map<String, Object> parametros)
-    {
-        try
-        {
-            MongoCollection<Document> colecao = this.database.getCollection(collection);
-            String campo = parametros.get("campo").toString();
-            String chave = parametros.get("chave").toString();
-
-            colecao.deleteOne(eq(campo, chave));
-
-            System.out.println("Documento deletado com sucesso");
-            this.mongoClient.close();
-            return("Documento deletado com sucesso");
-        }
-        catch (Exception e)
-        {
-            System.err.println("Erro ao deletar documento:" + e.getMessage());
-            this.mongoClient.close();
-            return("Erro ao deletar o documento");
-        }
-    }
 }

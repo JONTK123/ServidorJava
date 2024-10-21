@@ -12,7 +12,7 @@ public class Parceiro {
     private ObjectInputStream receptor; //Objeto para receber a mensagem
     private ObjectOutputStream transmissor; //Objeto para enviar a mensagem
 
-    private Comunicado proximoComunicado = null; //Espiar comunicado que esta vindo sem consumir o comunicado presente
+    private String proximoComunicado = null; //Espiar comunicado que esta vindo sem consumir o comunicado presente
 
     private Semaphore mutEx = new Semaphore(1, true); //Semáforo para exclusão mútua, 1 recurso apenas para alocacao
 
@@ -31,7 +31,7 @@ public class Parceiro {
         this.transmissor = transmissor;
     }
 
-    public void receba (Comunicado x) throws Exception
+    public void receba (String x) throws Exception
     {
         try
         {
@@ -44,12 +44,12 @@ public class Parceiro {
         }
     }
 
-    public Comunicado espie () throws Exception
+    public String espie () throws Exception
     {
         try
         {
             this.mutEx.acquireUninterruptibly();
-            if (this.proximoComunicado==null) this.proximoComunicado = (Comunicado)this.receptor.readObject();
+            if (this.proximoComunicado==null) this.proximoComunicado = (String)this.receptor.readObject();
             this.mutEx.release();
             return this.proximoComunicado;
         }
@@ -59,12 +59,12 @@ public class Parceiro {
         }
     }
 
-    public Comunicado envie () throws Exception
+    public String envie () throws Exception
     {
         try
         {
-            if (this.proximoComunicado==null) this.proximoComunicado = (Comunicado)this.receptor.readObject();
-            Comunicado ret         = this.proximoComunicado;
+            if (this.proximoComunicado==null) this.proximoComunicado = (String)this.receptor.readObject();
+            String ret         = this.proximoComunicado;
             this.proximoComunicado = null;
             return ret;
         }

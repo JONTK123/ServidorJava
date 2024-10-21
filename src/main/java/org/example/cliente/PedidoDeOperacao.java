@@ -14,7 +14,7 @@ public class PedidoDeOperacao extends Comunicado {
 
     private String operacao;
     private String colecao;
-    private Map<String, Object> parametros;
+    private String parametros;
 
 
 
@@ -24,7 +24,7 @@ public class PedidoDeOperacao extends Comunicado {
         this.colecao = colecao;
     }
 
-    public PedidoDeOperacao(String operacao, String colecao, Map<String, Object> parametros)
+    public PedidoDeOperacao(String operacao, String colecao, String parametros)
 
     {
         this.operacao = operacao;
@@ -41,7 +41,7 @@ public class PedidoDeOperacao extends Comunicado {
 
     public String getColecao() {return this.colecao;}
 
-    public Map<String, Object> getParametros() {return this.parametros;}
+    public String getParametros() {return this.parametros;}
     
     
     @Override

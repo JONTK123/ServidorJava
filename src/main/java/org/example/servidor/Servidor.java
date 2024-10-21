@@ -66,7 +66,7 @@ public class Servidor
                     {
                         try
                         {
-                            usuario.receba (comunicadoDeDesligamento);
+                            usuario.receba (comunicadoDeDesligamento.toString());
                             usuario.adeus  ();
                         }
                         catch (Exception erro)

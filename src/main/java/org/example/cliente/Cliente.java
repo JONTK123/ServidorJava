@@ -71,23 +71,12 @@ public class Cliente {
 
         //Falta implementar TratadoraDeComunicadoDeDesligamento
 
-            Map<String, Object> parametros = new HashMap<String, Object>();
-
-            parametros = null;
-
-            servidor.receba(new PedidoDeOperacao("GET", "Usuario"));
-            servidor.receba(new PedidoDeResultado());
-
-            Comunicado comunicado = null;
-            do{
-
-                comunicado = (Comunicado)servidor.espie();
-
-            }while(!(comunicado instanceof Resultado));
-            Resultado resultado = (Resultado) servidor.envie();
 
 
-            System.out.println ("Resultado atual: "+resultado.getResultado());
+            String doc = "{\"name\":\"João\", \"email\":\"email teste\", \"birthday\":\"data teste\"}";
+
+            servidor.receba(doc);
+
 
 
         }
