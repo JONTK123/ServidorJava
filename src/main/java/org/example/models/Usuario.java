@@ -1,5 +1,7 @@
 package org.example.models;
 
+import org.example.Comunicado;
+
 import java.io.Serializable;
 
 public class Usuario implements Serializable {
@@ -17,15 +19,12 @@ public class Usuario implements Serializable {
     public String getName(){
         return this.name;
     }
-
     public String getEmail(){
         return this.email;
     }
-
     public String getData(){
         return this.birthday;
     }
-
 
     @Override
     public boolean equals(Object b){

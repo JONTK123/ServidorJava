@@ -2,18 +2,11 @@ package org.example.cliente;
 
 import org.example.Parceiro;
 import org.example.Teclado;
-import org.example.models.Avaliacao;
-import org.example.models.Data;
-import org.example.models.Usuario;
-
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Cliente {
-
     public static final String HOST_PADRAO = "localhost";
     public static final int PORTA_PADRAO = 3000;
 
@@ -59,21 +52,35 @@ public class Cliente {
         try {
             servidor = new Parceiro(conexao, receptor, transmissor);
 
-        } catch (Exception erro) {
+        } catch (Exception error) {
             System.err.println("Indique o servidor e a porta corretos!\n");
             return;
         }
 
-        //Falta implementar TratadoraDeComunicadoDeDesligamento
+        //Tratando Desligamento do Servidor
+        TratadoraDeComunicadoDeDesligamento tratadoraDeComunicadoDeDesligamento = new TratadoraDeComunicadoDeDesligamento(servidor);
+        tratadoraDeComunicadoDeDesligamento.start();
 
-            Map<String, Object> parametros = new HashMap<String, Object>();
+        //Parametros para caso cliente queira implementar um CRUD
+//        Map<String, Object> parametros = new HashMap<String, Object>();
+//        parametros = null;
 
-            parametros.put("campo", "name" )  ;
-            parametros.put("chave", "Filipe");
+        //Enviando Pedido de Operação GET
+        servidor.receba(new PedidoDeOperacao("GET", "Usuario"));
 
-            servidor.receba(new PedidoDeOperacao("DELETE", "Usuario", parametros));
-            //aqui é .espie() ou .envie() NÃO SEI AINDA
-            //servidor.envie();
+        //Enviando Pedido de Resultado
+        servidor.receba(new PedidoDeResultado());
 
+        //Tratando Resultado
+        TratadorDeComunicadoResultado tratadorDeComunicadoResultado = new TratadorDeComunicadoResultado(servidor);
+        tratadorDeComunicadoResultado.start();
+
+        //Desconectando do servidor
+        System.out.println ("Digite 'desligar' para se desconectar do servidor");
+        String comando = Teclado.getUmString();
+        if (comando.equals("desligar")) {
+          servidor.receba(new PedidoParaSair());
+          System.out.println("Desconectando do servidor...");
         }
+    }
 }

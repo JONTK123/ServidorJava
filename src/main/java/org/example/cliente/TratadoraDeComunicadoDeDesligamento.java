@@ -18,8 +18,11 @@ public class TratadoraDeComunicadoDeDesligamento extends Thread {
         try {
             while (true) {
                 Comunicado comunicado = servidor.espie();
+                if (comunicado == null) {
+                    System.err.println("Erro de recepção: comunicado nulo");
+                    continue;
+                }
                 if (comunicado instanceof ComunicadoDeDesligamento) {
-                    System.out.println("Servidor solicitou desligamento. Encerrando...");
                     servidor.adeus();
                     System.exit(0);
                 }
