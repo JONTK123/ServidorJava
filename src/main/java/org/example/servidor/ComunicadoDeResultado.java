@@ -2,12 +2,11 @@ package org.example.servidor;
 
 import org.example.Comunicado;
 
-public class Resultado extends Comunicado
+public class ComunicadoDeResultado extends Comunicado
 {
     private Object resultado;
 
-    public Resultado (Object resultado)
-    {
+    public ComunicadoDeResultado (Object resultado) {
         this.resultado = resultado;
     }
 

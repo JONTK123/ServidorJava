@@ -21,19 +21,15 @@ public class Trajeto implements Serializable {
     public String getCompany(){
         return this.company;
     }
-
     public String getOrigin(){
         return this.origin;
     }
-
     public String getDestination(){
         return this.destination;
     }
-
     public String getDepartureTime(){
         return this.departureTime;
     }
-
     public String getArrivalTime(){
         return this.arrivalTime;
     }

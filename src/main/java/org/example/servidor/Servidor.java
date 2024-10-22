@@ -2,19 +2,13 @@ package org.example.servidor;
 
 import org.example.Parceiro;
 import org.example.Teclado;
-import org.example.servidor.AceitadoraDeConexao;
-import org.example.servidor.ComunicadoDeDesligamento;
-
 import java.util.*;
 
-public class Servidor
-{
+public class Servidor {
     public static String PORTA_PADRAO = "3000";
 
-    public static void main (String[] args)
-    {
-        if (args.length>1)
-        {
+    public static void main (String[] args) {
+        if (args.length>1) {
             System.err.println ("Uso esperado: java Servidor [PORTA]\n");
             return;
         }
@@ -24,48 +18,40 @@ public class Servidor
         if (args.length==1)
             porta = args[0];
 
-        ArrayList<Parceiro> usuarios =
-                new ArrayList<Parceiro> ();
+        ArrayList<Parceiro> usuarios = new ArrayList<Parceiro> ();
 
         AceitadoraDeConexao aceitadoraDeConexao=null;
-        try
-        {
+        try {
             aceitadoraDeConexao =
                     new AceitadoraDeConexao(porta, usuarios);
             aceitadoraDeConexao.start();
             System.out.println("STARTOU ACEITADORA DE CONEXAO");
         }
-        catch (Exception erro)
-        {
+        catch (Exception erro) {
             System.err.println ("Escolha uma porta apropriada e liberada para uso!\n");
             return;
         }
 
-        for(;;)
-        {
+        for(;;) {
             System.out.println ("O servidor esta ativo! Para desativa-lo,");
             System.out.println ("use o comando \"desativar\"\n");
             System.out.print   ("> ");
-
             String comando=null;
-            try
-            {
+
+            try {
                 comando = Teclado.getUmString();
             }
             catch (Exception erro)
             {}
 
-            if (comando.toLowerCase().equals("desativar"))
-            {
+            if (comando.toLowerCase().equals("desativar")) {
                 synchronized (usuarios)
                 {
                     ComunicadoDeDesligamento comunicadoDeDesligamento =
                             new ComunicadoDeDesligamento ();
 
-                    for (Parceiro usuario:usuarios)
-                    {
-                        try
-                        {
+                    for (Parceiro usuario:usuarios) {
+                        try {
                             usuario.receba (comunicadoDeDesligamento);
                             usuario.adeus  ();
                         }

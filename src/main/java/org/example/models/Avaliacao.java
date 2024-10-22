@@ -18,15 +18,12 @@ public class Avaliacao implements Serializable {
     public String getUser(){
         return this.user;
     }
-
     public String getCompany(){
         return this.company;
     }
-
     public String getComment(){
         return this.comment;
     }
-
     public int getGrade(){
         return this.grade;
     }

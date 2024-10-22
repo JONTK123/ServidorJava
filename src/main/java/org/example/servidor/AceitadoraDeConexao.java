@@ -1,26 +1,21 @@
 package org.example.servidor;
 
 import org.example.Parceiro;
-
 import java.net.*;
 import java.util.*;
 
-public class AceitadoraDeConexao extends Thread
-{
+public class AceitadoraDeConexao extends Thread {
     private ServerSocket pedido;
     private ArrayList<Parceiro> usuarios;
 
-    public AceitadoraDeConexao(String porta, ArrayList<Parceiro> usuarios) throws Exception
-    {
+    public AceitadoraDeConexao(String porta, ArrayList<Parceiro> usuarios) throws Exception {
         if (porta==null)
             throw new Exception ("A porta não foi identificada");
 
-        try
-        {
+        try {
             this.pedido = new ServerSocket (Integer.parseInt(porta));
         }
-        catch (Exception  e)
-        {
+        catch (Exception  e) {
             throw new Exception ("Porta invalida");
         }
 
@@ -30,28 +25,23 @@ public class AceitadoraDeConexao extends Thread
         this.usuarios = usuarios;
     }
 
-    public void run ()
-    {
-        for(;;)
-        {
+    public void run () {
+        for(;;) {
             Socket conexao=null;
 
-            try
-            {
+            try {
                 conexao = this.pedido.accept();
+            } catch (Exception erro) {continue;
             }
-            catch (Exception erro) {continue;}
 
             SupervisoraDeConexao supervisoraDeConexao=null;
 
-            try
-            {
+            try {
                 supervisoraDeConexao = new SupervisoraDeConexao (conexao, usuarios);
             }
             catch (Exception erro)
             {} // nao vai dar erro
             supervisoraDeConexao.start();
-
         }
     }
 }
