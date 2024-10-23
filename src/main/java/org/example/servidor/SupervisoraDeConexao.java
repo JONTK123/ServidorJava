@@ -83,11 +83,9 @@ public class SupervisoraDeConexao extends Thread{
             }
 
 
-            for(;;)
-            {
-//                Comunicado comunicado = this.usuario.envie ();
 
-                 String JASON = this.usuario.envie ();
+
+                 String JASON = this.usuario.envie();
                  Comunicado comunicado = new PedidoDeOperacao("POST", "Usuario", JASON);
 
                 if (comunicado==null)
@@ -130,7 +128,7 @@ public class SupervisoraDeConexao extends Thread{
                     }
                     this.usuario.adeus();
                 }
-            }
+
         }
         catch (Exception erro)
         {
