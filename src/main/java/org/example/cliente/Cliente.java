@@ -9,8 +9,7 @@ import org.example.models.Data;
 import org.example.models.Usuario;
 import org.example.servidor.Resultado;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,17 +42,17 @@ public class Cliente {
             return;
         }
 
-        ObjectOutputStream transmissor = null;
+        PrintWriter transmissor = null;
         try {
-            transmissor = new ObjectOutputStream(conexao.getOutputStream());
+            transmissor = new PrintWriter(conexao.getOutputStream());
         } catch (Exception erro) {
             System.err.println("Indique o servidor e a porta corretos!\n");
             return;
         }
 
-        ObjectInputStream receptor = null;
+        BufferedReader receptor = null;
         try {
-            receptor = new ObjectInputStream(conexao.getInputStream());
+            receptor = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
 
         } catch (Exception erro) {
             System.err.println("Indique o servidor e a porta corretos!\n");
@@ -73,7 +72,7 @@ public class Cliente {
 
 
 
-            String doc = "{\"name\":\"João\", \"email\":\"email teste\", \"birthday\":\"data teste\"}";
+            String doc = "{\"name\":\"Thiago Luiz\", \"email\":\"email teste\", \"birthday\":\"data teste\"}";
 
             servidor.receba(doc);
 

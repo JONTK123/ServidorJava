@@ -9,14 +9,14 @@ import java.net.Socket;
 //Classe Parceiro, responsável por estabelecer a comunicação entre o servidor e o cliente
 public class Parceiro {
     private Socket conexao; //Socket para estabelecer a conexão
-    private ObjectInputStream receptor; //Objeto para receber a mensagem
-    private ObjectOutputStream transmissor; //Objeto para enviar a mensagem
+    private BufferedReader receptor; //Objeto para receber a mensagem
+    private PrintWriter transmissor; //Objeto para enviar a mensagem
 
     private String proximoComunicado = null; //Espiar comunicado que esta vindo sem consumir o comunicado presente
 
     private Semaphore mutEx = new Semaphore(1, true); //Semáforo para exclusão mútua, 1 recurso apenas para alocacao
 
-    public Parceiro (Socket conexao, ObjectInputStream receptor, ObjectOutputStream transmissor) throws Exception {
+    public Parceiro (Socket conexao, BufferedReader receptor, PrintWriter transmissor) throws Exception {
         if (conexao == null)
             throw new Exception("Conexao ausente");
 
@@ -35,10 +35,10 @@ public class Parceiro {
     {
         try
         {
-            this.transmissor.writeObject (x);
-            this.transmissor.flush       ();
+            this.transmissor.println(x);
+            this.transmissor.flush();
         }
-        catch (IOException erro)
+        catch (Exception erro)
         {
             throw new Exception ("Erro de transmissao");
         }
@@ -49,7 +49,7 @@ public class Parceiro {
         try
         {
             this.mutEx.acquireUninterruptibly();
-            if (this.proximoComunicado==null) this.proximoComunicado = (String)this.receptor.readObject();
+            if (this.proximoComunicado==null) this.proximoComunicado = (String)this.receptor.readLine();
             this.mutEx.release();
             return this.proximoComunicado;
         }
@@ -63,7 +63,7 @@ public class Parceiro {
     {
         try
         {
-            if (this.proximoComunicado==null) this.proximoComunicado = (String)this.receptor.readObject();
+            if (this.proximoComunicado==null) this.proximoComunicado = (String)this.receptor.readLine();
             String ret         = this.proximoComunicado;
             this.proximoComunicado = null;
             return ret;

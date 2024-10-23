@@ -43,20 +43,20 @@ public class SupervisoraDeConexao extends Thread{
 
     public void run()
     {
-        ObjectOutputStream transmissor = null;
+        PrintWriter transmissor = null;
 
         try
         {
-            transmissor = new ObjectOutputStream(this.conexao.getOutputStream());
+            transmissor = new PrintWriter(this.conexao.getOutputStream());
         }
         catch(Exception e) {return;}
 
 
-        ObjectInputStream receptor = null;
+       BufferedReader receptor = null;
 
         try
         {
-            receptor = new ObjectInputStream(this.conexao.getInputStream());
+            receptor = new BufferedReader(new InputStreamReader(this.conexao.getInputStream()));
         }
         catch(Exception e)
         {
