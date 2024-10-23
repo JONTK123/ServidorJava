@@ -23,7 +23,7 @@ import java.io.*;
 public class SupervisoraDeConexao extends Thread{
 
     private boolean status = false;
-    private Object res;
+    private String res;
     private Parceiro usuario;
     private Socket conexao;
     private ArrayList<Parceiro> usuarios;
@@ -107,7 +107,7 @@ public class SupervisoraDeConexao extends Thread{
                                 BancoDados db = new BancoDados();
 
                                 this.res = db.post(colecao, parametros);
-                                usuario.receba(String.valueOf(new Resultado(this.res)));
+                                usuario.receba(this.res);
                             }
                             catch (Exception erro)
                             {

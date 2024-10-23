@@ -4,14 +4,14 @@ import org.example.Comunicado;
 
 public class Resultado extends Comunicado
 {
-    private Object resultado;
+    private String resultado;
 
-    public Resultado (Object resultado)
+    public Resultado (String resultado)
     {
         this.resultado = resultado;
     }
 
-    public Object getResultado()
+    public String getResultado()
     {
         return this.resultado;
     }
