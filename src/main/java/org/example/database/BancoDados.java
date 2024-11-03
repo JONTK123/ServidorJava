@@ -45,7 +45,7 @@ public class BancoDados {
                 System.out.println(doc.toJson());  //Remover isso depois
             }
             this.mongoClient.close();
-            return lista;
+            return lista; //está retornando formato de array list Object mesmo tendo o conteúdo em json.
         }
         catch (Exception e) {
             System.err.println("Erro ao buscar docs no banco:" + e.getMessage());
