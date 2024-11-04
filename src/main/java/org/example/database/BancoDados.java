@@ -31,7 +31,7 @@ public class BancoDados {
             MongoCollection<Document> colecao = this.database.getCollection(collection);
             FindIterable<Document> docList;
 
-            if(parametros==null) docList = colecao.find();
+            if(parametros==null || parametros.isEmpty()) docList = colecao.find();
 
             else {
                 String chave = (String) parametros.get("chave");
@@ -45,6 +45,7 @@ public class BancoDados {
                 System.out.println(doc.toJson());  //Remover isso depois
             }
             this.mongoClient.close();
+            System.out.println(lista);
             return lista; //está retornando formato de array list Object mesmo tendo o conteúdo em json.
         }
         catch (Exception e) {
