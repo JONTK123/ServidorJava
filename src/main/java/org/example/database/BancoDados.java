@@ -2,8 +2,11 @@ package org.example.database;
 
 import com.google.gson.Gson;
 import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+
 import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,9 +37,23 @@ public class BancoDados {
             if(parametros==null || parametros.isEmpty()) docList = colecao.find();
 
             else {
-                String chave = (String) parametros.get("chave");
-                String valor = (String) parametros.get("valor");
-                docList = colecao.find(eq(chave, valor));
+                // Extrai os parâmetros 'cidadePartida' e 'instituicaoDestino'
+                String cidadePartida = (String) parametros.get("cidadePartida");
+                System.out.println(cidadePartida);
+                String instituicaoDestino = (String) parametros.get("instituicaoDestino");
+                System.out.println(instituicaoDestino);
+                // Cria expressões regex que permitem variantes de capitalização e hífen
+                String regexCidadePartida = "(?i)" + cidadePartida.replaceAll("[- ]", "[- ]?");
+                String regexInstituicaoDestino = "(?i)" + instituicaoDestino.replaceAll("[- ]", "[- ]?");
+
+                // Cria filtros regex para buscar nos objetos dentro do array `trajetos`
+                Bson filtro = Filters.elemMatch("trajetos", Filters.and(
+                        Filters.regex("cidadePartida", regexCidadePartida),
+                        Filters.regex("instituicaoDestino", regexInstituicaoDestino)
+                ));
+
+                // Aplica o filtro à consulta
+                docList = colecao.find(filtro);
             }
 
             ArrayList<Object> lista = new ArrayList<Object>();
