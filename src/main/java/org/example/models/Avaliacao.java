@@ -1,6 +1,11 @@
 package org.example.models;
 
+import org.example.database.BancoDados;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Avaliacao implements Serializable {
     private String user;
@@ -56,4 +61,32 @@ public class Avaliacao implements Serializable {
     public String toString(){
         return(this.user+"/"+this.company+"/"+this.comment+"/"+this.grade);
     }
+
+    public void insereAvaliacao() throws Exception{
+        //REALIZAR A ALTERAÇÃO DO ARRAY DE AVALIAÇÕES PARA INSERIR UMA AVALIAÇÃO
+    }
+
+    public void mediaAvaliacoes(Map<String, Object> avaliacao) throws Exception{
+        BancoDados db = new BancoDados();
+        try{
+            ArrayList<String> avaliacoes = (ArrayList<String>) avaliacao.get("avaliacoes");
+            String id = avaliacao.get("id").toString();
+            int totalNotas = 0;
+            for(String avac : avaliacoes){
+                String nota = avac.split(",")[0];
+                int n = Integer.parseInt(nota);
+                totalNotas += n;
+            }
+
+            Map<String, Object> novo = new HashMap<>();
+            novo.put("campo", "mediaAvl");
+            novo.put("chave", id);
+            novo.put("novoValor", totalNotas);
+            db.put("Empresa", novo);
+
+        }catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
 }
