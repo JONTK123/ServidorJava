@@ -1,5 +1,7 @@
 package org.example.models;
 
+import com.mongodb.client.FindIterable;
+import org.bson.Document;
 import org.example.database.BancoDados;
 
 import java.io.Serializable;
@@ -62,8 +64,34 @@ public class Avaliacao implements Serializable {
         return(this.user+"/"+this.company+"/"+this.comment+"/"+this.grade);
     }
 
-    public void insereAvaliacao() throws Exception{
-        //REALIZAR A ALTERAÇÃO DO ARRAY DE AVALIAÇÕES PARA INSERIR UMA AVALIAÇÃO
+    public void insereAvaliacao(Map<String, Object> avaliacao) throws Exception{
+        BancoDados db = new BancoDados();
+        try{
+            String id = avaliacao.get("id").toString();
+            Map<String, Object> doc = new HashMap<>();
+            doc.put("chave", id);
+            Map<String, Object> parametros = new HashMap<>();
+            ArrayList<Document> docs = (ArrayList<Document>) db.get("Empresa", parametros);
+            for(Document documents: docs){
+                int i = 0;
+                Document x = docs.get(i);
+                String id_x = x.getString("id");
+                if(documents.getString(id).equals(id_x)){
+                    Document avac = (Document) avaliacao;
+                    docs.add(avac);
+                }
+            }
+
+            Map<String, Object> novo = new HashMap<>();
+            novo.put("campo", "avaliacoes");
+            novo.put("chave", id);
+            novo.put("novoValor", docs);
+            db.put("Empresa", novo);
+
+        }catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+        //ACHO QUE É ISSO PESSOAL... REVISAR
     }
 
     public void mediaAvaliacoes(Map<String, Object> avaliacao) throws Exception{
@@ -78,15 +106,18 @@ public class Avaliacao implements Serializable {
                 totalNotas += n;
             }
 
+            int media = (totalNotas / avaliacoes.size());
+
             Map<String, Object> novo = new HashMap<>();
             novo.put("campo", "mediaAvl");
             novo.put("chave", id);
-            novo.put("novoValor", totalNotas);
+            novo.put("novoValor", media);
             db.put("Empresa", novo);
 
         }catch(Exception e){
             throw new Exception(e.getMessage());
         }
+        //ACHO QUE É ISSO PESSOAL... REVISAR
     }
 
 }
