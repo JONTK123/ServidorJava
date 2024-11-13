@@ -37,10 +37,12 @@ public class BancoDados {
         try{
             MongoCollection<Document> colecao = this.database.getCollection(collection);
             String email = (String) parametros.get("email");
+            System.out.println(email);
             Document doc = colecao.find(eq("email", email)).first();
 
             if (doc != null) {
-                String nome = (String) doc.get("nome");
+                String nome = (String) doc.get("name");
+                System.out.println(nome);
                 return nome;
             } else {
                 return "Usuário não encontrado";
@@ -51,7 +53,7 @@ public class BancoDados {
         }
     }
 
-    public Object get(String collection, Map<String, Object> parametros) {
+    public Object getEmpresas(String collection, Map<String, Object> parametros) {
         try {
             MongoCollection<Document> colecao = this.database.getCollection(collection);
             FindIterable<Document> docList;
@@ -94,7 +96,7 @@ public class BancoDados {
         }
     }
 
-    public String post (String collection, Map<String, Object> parametros) {
+    public String inserirUsuarioEmpresa (String collection, Map<String, Object> parametros) {
         try {
             Gson gson = new Gson();
 
@@ -118,7 +120,7 @@ public class BancoDados {
         }
     }
 
-    public String put(String collection, Map<String, Object> parametros) {
+    public String addAvl(String collection, Map<String, Object> parametros) {
         try {
             Gson gson = new Gson();
 

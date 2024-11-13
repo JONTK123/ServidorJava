@@ -76,24 +76,25 @@ public class SupervisoraDeConexao extends Thread {
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
-                        case "GET":
+                            break;
+                        case "GETEMPRESAS":
                             try {
-                                this.res = db.get(colecao, parametros);
+                                this.res = db.getEmpresas(colecao, parametros);
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
                             break;
-                        case "POST":
+                        case "ADD":
                             try {
-                                this.res = db.post(colecao, parametros);
+                                this.res = db.inserirUsuarioEmpresa(colecao, parametros);
                                 usuario.receba(new ComunicadoDeResultado(this.res));
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
                             break;
-                        case "PUT":
+                        case "ADDAVL":
                             try {
-                                this.res = db.put(colecao, parametros);
+                                this.res = db.addAvl(colecao, parametros);
                                 usuario.receba(new ComunicadoDeResultado(this.res));
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
