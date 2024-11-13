@@ -3,9 +3,13 @@ package org.example.database;
 import com.google.gson.Gson;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+import org.example.models.Avaliacao;
 
 import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
@@ -26,6 +30,24 @@ public class BancoDados {
         }
         catch (Exception e) {
             System.err.println("Erro ao instanciar o banco:" + e.getMessage());
+        }
+    }
+
+    public String getUserName(String collection, Map<String, Object> parametros) {
+        try{
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+            String email = (String) parametros.get("email");
+            Document doc = colecao.find(eq("email", email)).first();
+
+            if (doc != null) {
+                String nome = (String) doc.get("nome");
+                return nome;
+            } else {
+                return "Usuário não encontrado";
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar nome do usuário: " + e.getMessage());
+            return "Erro ao buscar nome do usuário";
         }
     }
 
@@ -98,25 +120,35 @@ public class BancoDados {
 
     public String put(String collection, Map<String, Object> parametros) {
         try {
+            Gson gson = new Gson();
+
             MongoCollection<Document> colecao = this.database.getCollection(collection);
 
-            String campo = parametros.get("campo").toString();
-            String chave = parametros.get("chave").toString();
-            Object novoValor = parametros.get("novoValor");
+            // Cria o objeto Avaliacao
+            Map<String, Object> docNovo = (Map<String, Object>) parametros.get("docNovo");
+            Avaliacao avaliacao = new Avaliacao(
+                    (String) docNovo.get("cnpj"),
+                    (String) docNovo.get("nomeUsuario"),
+                    (String) docNovo.get("comentario"),
+                    (double) docNovo.get("nota")
+            );
 
-            colecao.updateOne(eq(campo, chave), set(campo, novoValor));
+            // Adiciona a avaliação ao array de avaliações da empresa
+            avaliacao.adicionarAvl(colecao);
 
-            System.out.println("Documento atualizado com sucesso");
+            // Após adicionar, calcula a média das avaliações
+            avaliacao.mediaAvaliacoes(colecao, avaliacao.getCnpj());
 
+            return "Avaliação adicionada e média atualizada com sucesso.";
+        } catch (Exception e) {
+            System.err.println("Erro ao adicionar avaliação: " + e.getMessage());
+            return "Erro ao adicionar a avaliação.";
+        } finally {
             this.mongoClient.close();
-            return("Documento atualizado com sucesso");
-        }
-        catch (Exception e) {
-            System.err.println("Erro ao atualizar documento:" + e.getMessage());
-            this.mongoClient.close();
-            return("Erro ao atualizar documento");
         }
     }
+
+
 
     public String delete(String collection, Map<String, Object> parametros) {
         try {

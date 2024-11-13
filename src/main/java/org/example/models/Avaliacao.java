@@ -1,38 +1,38 @@
 package org.example.models;
 
-import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
-import org.example.database.BancoDados;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class Avaliacao implements Serializable {
-    private String user;
-    private String company;
-    private String comment;
-    private  int grade;
+    private String cnpj;
+    private String nomeUsuario;
+    private String comentario;
+    private double nota;
 
-    public Avaliacao(String username, String company, String comment, int grade){
-        this.user = username;
-        this.company = company;
-        this.comment = comment;
-        this.grade = grade;
+    public Avaliacao(String username, String nomeUsuario, String comentario, double nota){
+        this.cnpj = username;
+        this.nomeUsuario = nomeUsuario;
+        this.comentario = comentario;
+        this.nota = nota;
     }
 
-    public String getUser(){
-        return this.user;
+    public String getCnpj(){
+        return this.cnpj;
     }
-    public String getCompany(){
-        return this.company;
+    public String getNomeUsuario(){
+        return this.nomeUsuario;
     }
-    public String getComment(){
-        return this.comment;
+    public String getComentario(){
+        return this.comentario;
     }
-    public int getGrade(){
-        return this.grade;
+    public double getNota(){
+        return this.nota;
     }
 
     @Override
@@ -42,82 +42,75 @@ public class Avaliacao implements Serializable {
         if(b.getClass()!= this.getClass()) return false;
 
         Avaliacao other = (Avaliacao) b;
-        if(!this.user.equals(other.user)) return false;
-        if(!this.company.equals(other.company)) return false;
-        if(!this.comment.equals(other.comment)) return false;
-        if(this.grade != other.grade) return false;
+        if(!this.cnpj.equals(other.cnpj)) return false;
+        if(!this.nomeUsuario.equals(other.nomeUsuario)) return false;
+        if(!this.comentario.equals(other.comentario)) return false;
+        if(this.nota != other.nota) return false;
         return true;
     }
 
     @Override
     public int hashCode(){
         int ret = 1;
-        ret = ret * 7 + this.user.hashCode();
-        ret = ret * 7 + this.company.hashCode();
-        ret = ret * 7 + this.comment.hashCode();
-        ret = ret * 7 + Integer.valueOf(this.grade).hashCode();
+        ret = ret * 7 + this.cnpj.hashCode();
+        ret = ret * 7 + this.nomeUsuario.hashCode();
+        ret = ret * 7 + this.comentario.hashCode();
+        ret = ret * 7 + Double.valueOf(this.nota).hashCode();
         return ret;
     }
 
     @Override
     public String toString(){
-        return(this.user+"/"+this.company+"/"+this.comment+"/"+this.grade);
+        return(this.cnpj+"/"+this.nomeUsuario+"/"+this.comentario+"/"+this.nota);
     }
 
-    public void insereAvaliacao(Map<String, Object> avaliacao) throws Exception{
-        BancoDados db = new BancoDados();
-        try{
-            String id = avaliacao.get("id").toString();
-            Map<String, Object> doc = new HashMap<>();
-            doc.put("chave", id);
-            Map<String, Object> parametros = new HashMap<>();
-            ArrayList<Document> docs = (ArrayList<Document>) db.get("Empresa", parametros);
-            for(Document documents: docs){
-                int i = 0;
-                Document x = docs.get(i);
-                String id_x = x.getString("id");
-                if(documents.getString(id).equals(id_x)){
-                    Document avac = (Document) avaliacao;
-                    docs.add(avac);
+    // Adiciona uma avaliação ao array de avaliações
+    public void adicionarAvl(MongoCollection<Document> colecao) throws Exception {
+
+        Document novaAvaliacao = new Document("nomeUsuario", this.nomeUsuario)
+                                        .append("comentario", this.comentario)
+                                        .append("nota", this.nota);
+
+        // Atualiza o documento da empresa e adiciona a avaliação
+        UpdateResult resultado = colecao.updateOne(
+                Filters.eq("cnpj", this.cnpj), // Filtro pelo cnpj da empresa
+                Updates.push("avaliacoes", novaAvaliacao) // Adiciona a avaliação no array "avaliacoes"
+        );
+
+        if (resultado.getMatchedCount() > 0) {
+            if (resultado.getModifiedCount() > 0) {
+                System.out.println("Avaliação adicionada com sucesso.");
+            } else {
+                System.out.println("Documento encontrado, mas nenhuma alteração foi feita.");
+            }
+        } else {
+            System.out.println("Documento não encontrado.");
+            throw new Exception("Documento não encontrado.");
+        }
+    }
+
+    // Calcula a média das avaliações
+    public void mediaAvaliacoes(MongoCollection<Document> colecao, String cnpj) throws Exception {
+        Document empresa = colecao.find(Filters.eq("cnpj", cnpj)).first();
+
+        if (empresa != null) {
+            List<Document> avaliacoes = empresa.getList("avaliacoes", Document.class);
+            if (avaliacoes != null && !avaliacoes.isEmpty()) {
+                double somaNotas = 0;
+                for (Document avaliacao : avaliacoes) {
+                    somaNotas += avaliacao.getDouble("nota");
                 }
+                double media = somaNotas / avaliacoes.size();
+                // Atualiza o campo "mediaAvl" com a nova média
+                colecao.updateOne(Filters.eq("cnpj", cnpj), Updates.set("mediaAvl", media));
+                System.out.println("Média de avaliações atualizada: " + media);
+            } else {
+                System.out.println("Não há avaliações para calcular a média.");
             }
-
-            Map<String, Object> novo = new HashMap<>();
-            novo.put("campo", "avaliacoes");
-            novo.put("chave", id);
-            novo.put("novoValor", docs);
-            db.put("Empresa", novo);
-
-        }catch(Exception e){
-            throw new Exception(e.getMessage());
+        } else {
+            System.out.println("Empresa não encontrada.");
+            throw new Exception("Empresa não encontrada.");
         }
-        //ACHO QUE É ISSO PESSOAL... REVISAR
-    }
-
-    public void mediaAvaliacoes(Map<String, Object> avaliacao) throws Exception{
-        BancoDados db = new BancoDados();
-        try{
-            ArrayList<String> avaliacoes = (ArrayList<String>) avaliacao.get("avaliacoes");
-            String id = avaliacao.get("id").toString();
-            int totalNotas = 0;
-            for(String avac : avaliacoes){
-                String nota = avac.split(",")[0];
-                int n = Integer.parseInt(nota);
-                totalNotas += n;
-            }
-
-            int media = (totalNotas / avaliacoes.size());
-
-            Map<String, Object> novo = new HashMap<>();
-            novo.put("campo", "mediaAvl");
-            novo.put("chave", id);
-            novo.put("novoValor", media);
-            db.put("Empresa", novo);
-
-        }catch(Exception e){
-            throw new Exception(e.getMessage());
-        }
-        //ACHO QUE É ISSO PESSOAL... REVISAR
     }
 
 }

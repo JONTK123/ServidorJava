@@ -70,6 +70,12 @@ public class SupervisoraDeConexao extends Thread {
 
                     BancoDados db = new BancoDados();
                     switch (pedidoDeOperacao.getOperacao()) {
+                        case "USERNAME":
+                            try{
+                                this.res = db.getUserName(colecao, parametros);
+                            } catch (Exception erro) {
+                                System.err.println(erro.getMessage());
+                            }
                         case "GET":
                             try {
                                 this.res = db.get(colecao, parametros);
