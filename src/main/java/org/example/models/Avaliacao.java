@@ -15,8 +15,8 @@ public class Avaliacao implements Serializable {
     private String comentario;
     private double nota;
 
-    public Avaliacao(String username, String nomeUsuario, String comentario, double nota){
-        this.cnpj = username;
+    public Avaliacao(String cnpj, String nomeUsuario, String comentario, double nota){
+        this.cnpj = cnpj;
         this.nomeUsuario = nomeUsuario;
         this.comentario = comentario;
         this.nota = nota;
