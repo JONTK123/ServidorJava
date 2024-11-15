@@ -1,29 +1,30 @@
 package org.example.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Empresa implements Serializable {
 
     private String name;
     private String email;
-    private String CNPJ;
-    private String CEP;
-    private String address;
-    private String phone;
-    private String password;
-    private int Qtd_reviews;
-    private double Av_grade;
+    private String cnpj;
+    private String telefone;
+    private Endereco endereco;
+    private double mediaAvl;
+    private ArrayList<Object> avaliacoes;
+    private ArrayList<Object> trajetos;
 
-    public Empresa(String name, String email, String CNPJ, String CEP, String address, String phone, String password, int Qtd_reviews, double Av_grade){
+
+
+    public Empresa(String name, String email, String cnpj, String telefone, Endereco endereco){
         this.name = name;
         this.email = email;
-        this.CNPJ = CNPJ;
-        this.CEP = CEP;
-        this.address = address;
-        this.phone = phone;
-        this.password = password;
-        this.Qtd_reviews = Qtd_reviews;
-        this.Av_grade = Av_grade;
+        this.cnpj = cnpj;
+        this.telefone = telefone;
+        this.endereco = endereco;
+        this.mediaAvl = 0d;
+        this.avaliacoes = new ArrayList<Object>();
+        this.trajetos = new ArrayList<Object>();
     }
 
     public String getName(){
@@ -32,27 +33,20 @@ public class Empresa implements Serializable {
     public String getEmail(){
         return this.email;
     }
-    public String getCNPJ(){
-        return this.CNPJ;
+    public String getCnpj(){
+        return this.cnpj;
     }
-    public String getCEP(){
-        return this.CEP;
+    public String getTelefone(){
+        return this.telefone;
     }
-    public String getAddress(){
-        return this.address;
+    public Endereco getEndereco(){
+        return this.endereco;
     }
-    public String getPhone(){
-        return this.phone;
+    public Double getMediaAvl(){
+        return this.mediaAvl;
     }
-    public String getPassword(){
-        return this.password;
-    }
-    public int getQtdeReviews(){
-        return this.Qtd_reviews;
-    }
-    public double getAvGrade(){
-        return this.Av_grade;
-    }
+    public ArrayList<Object> getAvaliacoes(){ return this.avaliacoes;}
+    public ArrayList<Object> getTrajetos() {return this.trajetos;}
 
     @Override
     public boolean equals(Object b){
@@ -64,28 +58,36 @@ public class Empresa implements Serializable {
 
         if(!this.name.equals(other.name)) return false;
         if(!this.email.equals(other.email)) return false;
-        if(!this.CNPJ.equals(other.CNPJ)) return false;
-        if(!this.CEP.equals(other.CEP)) return false;
-        if(!this.address.equals(other.address)) return false;
-        if(!this.phone.equals(other.phone)) return false;
-        if(!this.password.equals(other.password)) return false;
-        if(this.Qtd_reviews != other.Qtd_reviews) return false;
-        if(this.Av_grade != other.Av_grade) return false;
+        if(!this.cnpj.equals(other.cnpj)) return false;
+        if(!this.telefone.equals(other.telefone)) return false;
+        if(!this.endereco.equals(other.endereco)) return false;
+        if(!(this.mediaAvl ==other.mediaAvl)) return false;
+        if(this.avaliacoes.size()!=other.avaliacoes.size()) return false;
+        if(this.trajetos.size()!=other.trajetos.size()) return false;
+
+        //TODO: COMPARAÇÃO ENTRE CADA ELEMENTO DOS VETORES DE TRAJETO E DE AVALIACOES
         return true;
     }
 
     @Override
     public int hashCode(){
         int ret = 1;
-        ret = ret * 7 + this.name.hashCode();
-        ret = ret * 7 + this.email.hashCode();
-        ret = ret * 7 + this.CNPJ.hashCode();
-        ret = ret * 7 + this.CEP.hashCode();
-        ret = ret * 7 + this.phone.hashCode();
-        ret = ret * 7 + this.address.hashCode();
-        ret = ret * 7 + this.password.hashCode();
-        ret = ret * 7 + Integer.valueOf(this.Qtd_reviews).hashCode();
-        ret = ret * 7 + Double.valueOf(this.Av_grade).hashCode();
+        ret += ret * 7 + this.name.hashCode();
+        ret += ret * 7 + this.email.hashCode();
+        ret += ret * 7 + this.cnpj.hashCode();
+        ret += ret * 7 + this.telefone.hashCode();
+        ret += ret * 7 + this.endereco.hashCode();
+        ret += ret * 7 + Double.valueOf(this.mediaAvl).hashCode();
+
+        for(int i=0;i<this.avaliacoes.size();i++)
+        {
+            ret += ret * 2 + this.avaliacoes.get(i).hashCode();
+        }
+
+        for(int i=0;i<this.trajetos.size();i++)
+        {
+            ret += ret * 2 + this.trajetos.get(i).hashCode();
+        }
         return ret;
     }
 
@@ -93,13 +95,12 @@ public class Empresa implements Serializable {
     public String toString(){
         return(this.name+"/"
                 +this.email+"/"
-                +this.CNPJ+"/"
-                +this.CEP+"/"
-                +this.phone+"/"
-                +this.address+"/"
-                +this.password+"/"
-                +this.Qtd_reviews+"/"
-                +this.Av_grade);
+                +this.cnpj+"/"
+                +this.telefone+"/"
+                +this.endereco.toString()+"/"
+                +this.mediaAvl+"/"
+                +this.avaliacoes.toString()+"/"
+                +this.trajetos.toString()+"/");
     }
 
 }
