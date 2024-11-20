@@ -1,25 +1,30 @@
 package org.example.models;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
+
 import java.io.Serializable;
 
 public class Trajeto implements Serializable {
 
-    private String company;
+    private String companyCNPJ;
     private String origin;
     private String destination;
     private String departureTime;
     private String arrivalTime;
 
-    public Trajeto(String company, String origin, String destination, String dT, String aT){
-        this.company = company;
+    public Trajeto(String companyCNPJ, String origin, String destination){
+        this.companyCNPJ = companyCNPJ;
         this.origin = origin;
         this.destination = destination;
-        this.departureTime = dT;
-        this.arrivalTime = aT;
     }
 
-    public String getCompany(){
-        return this.company;
+    public String getCompanyCNPJ(){
+        return this.companyCNPJ;
     }
     public String getOrigin(){
         return this.origin;
@@ -27,11 +32,26 @@ public class Trajeto implements Serializable {
     public String getDestination(){
         return this.destination;
     }
-    public String getDepartureTime(){
-        return this.departureTime;
-    }
-    public String getArrivalTime(){
-        return this.arrivalTime;
+
+    public void addTrajeto(MongoCollection<Document> collection) throws Exception{
+        Document novoTrajeto = new Document("cidadePartida", this.origin)
+                                    .append("instituicaoDestino", this.destination);
+
+        UpdateResult resultado = collection.updateOne(
+                Filters.eq("cnpj", this.companyCNPJ),
+                Updates.push("trajetos", novoTrajeto)
+        );
+
+        if (resultado.getMatchedCount() > 0) {
+            if (resultado.getModifiedCount() > 0) {
+                System.out.println("Trajeto adicionado com sucesso.");
+            } else {
+                System.out.println("Documento encontrado, mas nenhuma alteração foi feita.");
+            }
+        } else {
+            System.out.println("Documento não encontrado.");
+            throw new Exception("Documento não encontrado.");
+        }
     }
 
     @Override
@@ -41,28 +61,24 @@ public class Trajeto implements Serializable {
         if(b.getClass()!= this.getClass()) return false;
 
         Trajeto other = (Trajeto) b;
-        if(!this.company.equals(other.company)) return false;
+        if(!this.companyCNPJ.equals(other.companyCNPJ)) return false;
         if(!this.origin.equals(other.origin)) return false;
         if(!this.destination.equals(other.destination)) return false;
-        if(!this.departureTime.equals(other.departureTime)) return false;
-        if(!this.arrivalTime.equals(other.arrivalTime)) return false;
         return true;
     }
 
     @Override
     public int hashCode(){
         int ret = 1;
-        ret = ret * 7 + this.company.hashCode();
+        ret = ret * 7 + this.companyCNPJ.hashCode();
         ret = ret * 7 + this.origin.hashCode();
         ret = ret * 7 + this.destination.hashCode();
-        ret = ret * 7 + this.departureTime.hashCode();
-        ret = ret * 7 + this.arrivalTime.hashCode();
         return ret;
     }
 
     @Override
     public String toString(){
-        return(this.company+"/"+this.origin+"/"+this.destination+"/"+this.departureTime+"/"+this.arrivalTime);
+        return(this.companyCNPJ+"/"+this.origin+"/"+this.destination);
     }
 
 }

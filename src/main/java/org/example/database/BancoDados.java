@@ -1,15 +1,18 @@
 package org.example.database;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
 import io.github.cdimascio.dotenv.Dotenv;
+import netscape.javascript.JSObject;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.example.models.Avaliacao;
+import org.example.models.Trajeto;
 
 import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class BancoDados {
         }
     }
 
-    public String getUserName(String collection, Map<String, Object> parametros) {
+    public String getUser(String collection, Map<String, Object> parametros) {
         try{
             MongoCollection<Document> colecao = this.database.getCollection(collection);
             String email = (String) parametros.get("email");
@@ -42,10 +45,21 @@ public class BancoDados {
 
             if (doc != null) {
                 String nome = (String) doc.get("name");
-                System.out.println(nome);
-                return nome;
+                String tipoUsuario = (String) doc.get("tipoUsuario");
+                System.out.println(nome + " " + tipoUsuario);
+                return doc.toJson();
+
+
             } else {
-                return "Usuário não encontrado";
+                colecao = this.database.getCollection("Empresa");
+                doc = colecao.find(eq("email", email)).first();
+                if (doc != null) {
+                    String nome = (String) doc.get("name");
+                    String tipoUsuario = (String) doc.get("tipoUsuario");
+                    System.out.println("Empresa encontrada: " + nome);
+                    return doc.toJson();
+                }
+            return "Usuário não encontrado em nenhuma coleção.";
             }
         } catch (Exception e) {
             System.err.println("Erro ao buscar nome do usuário: " + e.getMessage());
@@ -150,24 +164,86 @@ public class BancoDados {
         }
     }
 
+    public String addTrajeto(String collection, Map<String, Object> parametros) {
+        try {
+            Gson gson = new Gson();
+            MongoCollection<Document> colecao = this.database.getCollection(collection);
+            Map<String, Object> docNovo = (Map<String, Object>) parametros.get("docNovo");
+            Trajeto trajeto = new Trajeto(
+                    (String) docNovo.get("cnpj"),
+                    (String) docNovo.get("cidadePartida"),
+                    (String) docNovo.get("instituicaoDestino")
+            );
 
+            trajeto.addTrajeto(colecao);
+            return "Trajeto adicionada com sucesso.";
+        } catch (Exception e) {
+            System.err.println("Erro ao adicionar trajeto: " + e.getMessage());
+            return "Erro ao adicionar a trajeto.";
+        } finally {
+            this.mongoClient.close();
+        }
+    }
+
+    public String updateEmpresa(String collection, Map<String, Object> parametros) {
+        try{
+
+            Gson gson = new Gson();
+            MongoCollection<Document> colacao = this.database.getCollection(collection);
+            Map<String, Object> docNovo = (Map<String, Object>) parametros.get("docNovo");
+
+            if (docNovo == null || !docNovo.containsKey("cnpj")) {
+                return "Erro: Documento inválido ou CNPJ não encontrado.";
+            }
+
+            String cnpj = (String) docNovo.get("cnpj");
+            Document filtro = new Document("cnpj", cnpj);
+
+            String jsonDocNovo = gson.toJson(docNovo);
+            Document doc = Document.parse(jsonDocNovo);
+
+            UpdateResult updateResult = colacao.updateOne(filtro,
+                    new Document("$set", doc));
+
+            if (updateResult.getMatchedCount() == 0) {
+                return "Nenhuma empresa encontrada com o CNPJ fornecido.";
+            }
+
+            System.out.println("Documento Atualizado com sucesso");
+            return "Empresa atualizada com sucesso.";
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar empresa: " + e.getMessage());
+            return "Erro ao atualizar empresa";
+        } finally {
+            this.mongoClient.close();
+        }
+    }
 
     public String delete(String collection, Map<String, Object> parametros) {
         try {
             MongoCollection<Document> colecao = this.database.getCollection(collection);
-            String campo = parametros.get("campo").toString();
-            String chave = parametros.get("chave").toString();
+            String cnpj = parametros.get("cnpj").toString();
+            String cidadePartida = parametros.get("cidadePartida").toString();
+            String instituicaoDestino = parametros.get("instituicaoDestino").toString();
 
-            colecao.deleteOne(eq(campo, chave));
+            Document filtro = new Document("cnpj", cnpj);
+
+            Document trajetoParaRemover = new Document()
+                    .append("cidadePartida", cidadePartida)
+                    .append("instituicaoDestino", instituicaoDestino);
+
+            Document remover = new Document("$pull", new Document("trajetos", trajetoParaRemover));
+
+            colecao.updateOne(filtro, remover);
 
             System.out.println("Documento deletado com sucesso");
-            this.mongoClient.close();
             return("Documento deletado com sucesso");
         }
         catch (Exception e) {
             System.err.println("Erro ao deletar documento:" + e.getMessage());
-            this.mongoClient.close();
             return("Erro ao deletar o documento");
+        } finally {
+            this.mongoClient.close();
         }
     }
 }

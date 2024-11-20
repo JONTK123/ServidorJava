@@ -70,9 +70,23 @@ public class SupervisoraDeConexao extends Thread {
 
                     BancoDados db = new BancoDados();
                     switch (pedidoDeOperacao.getOperacao()) {
+                        case "UPDATEEMPRESA":
+                            try {
+                                this.res = db.updateEmpresa(colecao, parametros);
+                            } catch (Exception e) {
+                                System.err.println(e.getMessage());
+                            }
+                            break;
+                        case "ADDTRAJETO":
+                            try {
+                                this.res = db.addTrajeto(colecao, parametros);
+                            } catch (Exception erro) {
+                                System.err.println(erro.getMessage());
+                            }
+                            break;
                         case "USERNAME":
                             try{
-                                this.res = db.getUserName(colecao, parametros);
+                                this.res = db.getUser(colecao, parametros);
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
@@ -100,7 +114,7 @@ public class SupervisoraDeConexao extends Thread {
                                 System.err.println(erro.getMessage());
                             }
                             break;
-                        case "DELETE":
+                        case "DELETETRAJETO":
                             try {
                                 this.res = db.delete(colecao, parametros);
                                 usuario.receba(new ComunicadoDeResultado(this.res));
