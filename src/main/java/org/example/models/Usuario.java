@@ -9,11 +9,13 @@ public class Usuario implements Serializable {
     private String name;
     private String email;
     private String birthday;
+    private String cpf;
 
-    public Usuario(String name, String email, String birthday){
+    public Usuario(String name, String email, String birthday, String cpf){
         this.name = name;
         this.email = email;
         this.birthday = birthday;
+        this.cpf = cpf;
     }
 
     public String getName(){
@@ -25,6 +27,7 @@ public class Usuario implements Serializable {
     public String getData(){
         return this.birthday;
     }
+    public String getCPF() {return this.cpf;}
 
     @Override
     public boolean equals(Object b){

@@ -31,6 +31,7 @@ public class AceitadoraDeConexao extends Thread {
 
             try {
                 conexao = this.pedido.accept();
+                System.out.println("Conexão Aceita");
             } catch (Exception erro) {continue;
             }
 

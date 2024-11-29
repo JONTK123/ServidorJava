@@ -59,6 +59,7 @@ public class SupervisoraDeConexao extends Thread {
 
             for (;;) {
                 Comunicado comunicado = this.usuario.envie();
+                System.out.println(comunicado);
 
                 if (comunicado == null)
                     return;
@@ -69,33 +70,51 @@ public class SupervisoraDeConexao extends Thread {
 
                     BancoDados db = new BancoDados();
                     switch (pedidoDeOperacao.getOperacao()) {
-                        case "GET":
+                        case "UPDATEEMPRESA":
                             try {
-                                this.res = db.get(colecao, parametros);
+                                this.res = db.updateEmpresa(colecao, parametros);
+                            } catch (Exception e) {
+                                System.err.println(e.getMessage());
+                            }
+                            break;
+                        case "ADDTRAJETO":
+                            try {
+                                this.res = db.addTrajeto(colecao, parametros);
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
                             break;
-                        case "POST":
-                            try {
-                                this.res = db.post(colecao, parametros);
-                                usuario.receba(new ComunicadoDeResultado(this.res));
+                        case "USERNAME":
+                            try{
+                                this.res = db.getUser(colecao, parametros);
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
                             break;
-                        case "PUT":
+                        case "GETEMPRESAS":
                             try {
-                                this.res = db.put(colecao, parametros);
-                                usuario.receba(new ComunicadoDeResultado(this.res));
+                                this.res = db.getEmpresas(colecao, parametros);
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
                             break;
-                        case "DELETE":
+                        case "ADD":
+                            try {
+                                this.res = db.inserirUsuarioEmpresa(colecao, parametros);
+                            } catch (Exception erro) {
+                                System.err.println(erro.getMessage());
+                            }
+                            break;
+                        case "ADDAVL":
+                            try {
+                                this.res = db.addAvl(colecao, parametros);
+                            } catch (Exception erro) {
+                                System.err.println(erro.getMessage());
+                            }
+                            break;
+                        case "DELETETRAJETO":
                             try {
                                 this.res = db.delete(colecao, parametros);
-                                usuario.receba(new ComunicadoDeResultado(this.res));
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
