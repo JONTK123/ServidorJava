@@ -15,10 +15,12 @@ public class Avaliacao implements Serializable {
     private String comentario;
     private double nota;
 
-    public Avaliacao(String cnpj, String nomeUsuario, String comentario, double nota){
+    public Avaliacao(String cnpj, String nomeUsuario, String comentario, double nota) throws Exception {
         this.cnpj = cnpj;
         this.nomeUsuario = nomeUsuario;
         this.comentario = comentario;
+        if (nota <= 0)
+            throw new Exception("Avaliacao deve ser maior que 0");
         this.nota = nota;
     }
 

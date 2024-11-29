@@ -14,8 +14,6 @@ public class Trajeto implements Serializable {
     private String companyCNPJ;
     private String origin;
     private String destination;
-    private String departureTime;
-    private String arrivalTime;
 
     public Trajeto(String companyCNPJ, String origin, String destination){
         this.companyCNPJ = companyCNPJ;

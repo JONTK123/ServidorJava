@@ -101,7 +101,6 @@ public class SupervisoraDeConexao extends Thread {
                         case "ADD":
                             try {
                                 this.res = db.inserirUsuarioEmpresa(colecao, parametros);
-                                usuario.receba(new ComunicadoDeResultado(this.res));
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
@@ -109,7 +108,6 @@ public class SupervisoraDeConexao extends Thread {
                         case "ADDAVL":
                             try {
                                 this.res = db.addAvl(colecao, parametros);
-                                usuario.receba(new ComunicadoDeResultado(this.res));
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }
@@ -117,7 +115,6 @@ public class SupervisoraDeConexao extends Thread {
                         case "DELETETRAJETO":
                             try {
                                 this.res = db.delete(colecao, parametros);
-                                usuario.receba(new ComunicadoDeResultado(this.res));
                             } catch (Exception erro) {
                                 System.err.println(erro.getMessage());
                             }

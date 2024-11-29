@@ -32,7 +32,7 @@ public class AvaliacaoTest {
     private Avaliacao avaliacao;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws Exception {
         // Criação do mock da coleção MongoDB
         mockCollection = Mockito.mock(MongoCollection.class);
         // Inicializa um objeto Avaliacao com valores fictícios

@@ -13,10 +13,11 @@ public class Empresa implements Serializable {
     private double mediaAvl;
     private ArrayList<Object> avaliacoes;
     private ArrayList<Object> trajetos;
+    private String tipoUsuario;
 
 
 
-    public Empresa(String name, String email, String cnpj, String telefone, Endereco endereco){
+    public Empresa(String name, String email, String cnpj, String telefone, Endereco endereco, String tipoUsuario) {
         this.name = name;
         this.email = email;
         this.cnpj = cnpj;
@@ -25,6 +26,7 @@ public class Empresa implements Serializable {
         this.mediaAvl = 0d;
         this.avaliacoes = new ArrayList<Object>();
         this.trajetos = new ArrayList<Object>();
+        this.tipoUsuario = tipoUsuario;
     }
 
     public String getName(){
@@ -45,6 +47,7 @@ public class Empresa implements Serializable {
     public Double getMediaAvl(){
         return this.mediaAvl;
     }
+    public String getTipoUsuario(){return this.tipoUsuario;}
     public ArrayList<Object> getAvaliacoes(){ return this.avaliacoes;}
     public ArrayList<Object> getTrajetos() {return this.trajetos;}
 
@@ -64,6 +67,7 @@ public class Empresa implements Serializable {
         if(!(this.mediaAvl ==other.mediaAvl)) return false;
         if(this.avaliacoes.size()!=other.avaliacoes.size()) return false;
         if(this.trajetos.size()!=other.trajetos.size()) return false;
+        if(!this.tipoUsuario.equals(other.tipoUsuario)) return false;
 
         //TODO: COMPARAÇÃO ENTRE CADA ELEMENTO DOS VETORES DE TRAJETO E DE AVALIACOES
         return true;
@@ -78,6 +82,7 @@ public class Empresa implements Serializable {
         ret += ret * 7 + this.telefone.hashCode();
         ret += ret * 7 + this.endereco.hashCode();
         ret += ret * 7 + Double.valueOf(this.mediaAvl).hashCode();
+        ret += ret * 7 + this.tipoUsuario.hashCode();
 
         for(int i=0;i<this.avaliacoes.size();i++)
         {
@@ -100,7 +105,8 @@ public class Empresa implements Serializable {
                 +this.endereco.toString()+"/"
                 +this.mediaAvl+"/"
                 +this.avaliacoes.toString()+"/"
-                +this.trajetos.toString()+"/");
+                +this.trajetos.toString()
+                +this.tipoUsuario.toString());
     }
 
 }
